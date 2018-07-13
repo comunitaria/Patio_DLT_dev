@@ -60,11 +60,6 @@ class App extends Component {
                     console.log('the voting options are: ', result);
                     this.setState({votingOptions: result});
                 });
-                VotingInstance.getVotingTopic(accounts[0]).then((result) => {
-                    // Update state with the result.
-                    console.log('the voting options are: ', result);
-                    this.setState({votingOptions: result});
-                });
 
             })
         })
