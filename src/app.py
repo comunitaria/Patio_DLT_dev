@@ -2,23 +2,30 @@ import time
 from web3 import Web3, HTTPProvider, eth
 from solc import compile_source
 from web3.contract import ConciseContract
-
+import os
 
 VOTING_CANDIDATES = [b'Yes', b'No', b'I dont care']
 
+my_provider = Web3.IPCProvider('/home/matyas/.ethereum/rinkeby/geth.ipc')
+
+
 # open a connection to the local ethereum node
-http_provider = HTTPProvider('http://localhost:9545')
-eth_provider = Web3(http_provider).eth
+#http_provider = HTTPProvider('http://localhost:9545')
+#eth_provider = Web3(http_provider).eth
+test = Web3(my_provider).eth
 
-
-default_account = eth_provider.accounts[0]
+default_account = eth_provider.accounts[5]
 
 transaction_details = {
     'from': default_account,
 }
 
+project_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+contracts_folder = os.path.join(project_directory, 'contracts')
+voting_contract_location = os.path.join(contracts_folder, 'Voting.sol')
+
 # load our Solidity code into an object
-with open('/home/matyas/Programmierung/comunitaria/comunitaria_voting/contracts/Voting.sol') as file:
+with open(voting_contract_location) as file:
     source_code = file.readlines()
 
 # compile the contract
@@ -49,7 +56,7 @@ contract_instance = eth_provider.contract(
     ContractFactoryClass=ConciseContract,
 )
 voting_options = contract_instance.getVotingOptions()
-print("voting contract deployed successfully the voting options are: ", voting_options)
+print("voting contract deployed successfully the voting options are: ", [Web3.toText(option) for option in voting_options])
 
 
 
