@@ -3,21 +3,41 @@ from web3 import Web3, HTTPProvider, eth
 from solc import compile_source
 from web3.contract import ConciseContract
 import os
+from pathlib import Path
+
+
+def get_eth_provider(provider_name):
+
+    # open a connection to a local ethereum node (ganache or geth)
+    eth_providers = {
+        'local': HTTPProvider('http://localhost:9545'),  # a (fake local blockchain instance (ganache)
+        'rinkeby': Web3.IPCProvider(os.path.join(home, '.ethereum/rinkeby/geth.ipc')) # a rinkeby testnet provider
+    }
+
+    return eth_providers[provider_name]
+
 
 VOTING_CANDIDATES = [b'Yes', b'No', b'I dont care']
 
-my_provider = Web3.IPCProvider('/home/matyas/.ethereum/rinkeby/geth.ipc')
+home = str(Path.home())
+network_to_use = 'rinkeby'
+provider_to_use = get_eth_provider(network_to_use)
+
+# todo not working yet but there is some issue with the rinkeby tesnet and its proof of authority style
+#if network_to_use == 'rinkeby':
+#    # https://ethereum.stackexchange.com/questions/44130/rinkeby-failure-with-web3-py-could-not-format-value-0x-as-field-extrada
+#    from web3.middleware import geth_poa_middleware
+#    provider_to_use.middleware_stack.inject(geth_poa_middleware, layer=0)
 
 
-# open a connection to the local ethereum node
 #http_provider = HTTPProvider('http://localhost:9545')
 #eth_provider = Web3(http_provider).eth
-test = Web3(my_provider).eth
+eth_provider = Web3(provider_to_use).eth
 
-default_account = eth_provider.accounts[5]
+account_for_deployment = eth_provider.accounts[5]
 
 transaction_details = {
-    'from': default_account,
+    'from': account_for_deployment,
 }
 
 project_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -57,6 +77,7 @@ contract_instance = eth_provider.contract(
 )
 voting_options = contract_instance.getVotingOptions()
 print("voting contract deployed successfully the voting options are: ", [Web3.toText(option) for option in voting_options])
+print("the deployed contract address is:", contract_address)
 
 
 
