@@ -42,8 +42,8 @@ voting = w3.eth.contract(
     abi=contract_abi,
 )
 
-# Display the default greeting from the contract
-print('Default contract greeting: {}'.format(
+# Display the default voting name from the contract
+print('Default contract name: {}'.format(
     voting.functions.getVotingName().call()
 ))
 
@@ -53,7 +53,7 @@ tx_hash = voting.functions.setVotingName(b'Changed voting name').transact()
 # Wait for transaction to be mined...
 w3.eth.waitForTransactionReceipt(tx_hash)
 
-# Display the new greeting value
+# Display the new contract name value
 print('Voting name is: {}'.format(
     voting.functions.getVotingName().call()
 ))
