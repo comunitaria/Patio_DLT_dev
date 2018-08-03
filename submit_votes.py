@@ -10,6 +10,7 @@ from web3.contract import ConciseContract
 # todo create rest api app where voting options and submitted votes and voting name can be passed
 VOTING_OPTIONS = [b'Matyas', b'Luciano', b'Miguel']
 SUBMITTED_VOTES = [1, 2, 3]
+USER_KEYS_USED = [b'leppvi12', b'uupal1by', b'mzcwxi85']
 VOTING_NAME = b'Comunitaria teset vote '
 
 
@@ -30,7 +31,7 @@ Voting = w3.eth.contract(abi=contract_abi, bytecode=contract_byte_code)
 
 
 # Submit the transaction that deploys the contract
-tx_hash = Voting.constructor(VOTING_OPTIONS, SUBMITTED_VOTES, VOTING_NAME).transact()
+tx_hash = Voting.constructor(VOTING_OPTIONS, SUBMITTED_VOTES, USER_KEYS_USED,VOTING_NAME).transact()
 
 # Wait for the transaction to be mined, and get the transaction receipt
 tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash)
@@ -59,4 +60,8 @@ print('Voting name is: {}'.format(
 ))
 print('Getting votes for Matyas now: {}'.format(
     voting.functions.getFullAmountOfVotesForOption(b'Matyas').call()
+))
+
+print('Getting voted option for user key leppvi12 now: {}'.format(
+    voting.functions.getVotedOptionForUserKey(b'leppvi12').call()
 ))

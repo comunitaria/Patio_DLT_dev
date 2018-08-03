@@ -5,15 +5,20 @@ contract Voting {
     // with the help of 2 arrays
     bytes32[] public votingOptions;
     uint8[] public votesReceived;
+    bytes32[] public userKeysUsedForVoting;
     mapping (bytes32 => uint8) public votesReceivedPerOption;
+    mapping (bytes32 => bytes32) public userKeyVotingHistoryLog;
     bytes32 public votingName;
 
-    function Voting(bytes32[] votingOptionsForTopic, uint8[] votesReceivedForTopic, bytes32 votingNameForTopic) public {
+    function Voting(bytes32[] votingOptionsForTopic, uint8[] votesReceivedForTopic,
+        bytes32[] userKeysUsedForVotingForTopic, bytes32 votingNameForTopic) public {
         votingOptions = votingOptionsForTopic;
         votesReceived = votesReceivedForTopic;
+        userKeysUsedForVoting = userKeysUsedForVotingForTopic;
         uint arrayLength = votingOptionsForTopic.length;
         for (uint i=0; i<arrayLength; i++) {
             votesReceivedPerOption[votingOptionsForTopic[i]] = votesReceivedForTopic[i];
+            userKeyVotingHistoryLog[userKeysUsedForVotingForTopic[i]] = votingOptionsForTopic[i];
         }
         votingName = votingNameForTopic;
     }
@@ -27,7 +32,10 @@ contract Voting {
         require(validVotingOption(option));
         return votesReceivedPerOption[option];
     }
-
+    function getVotedOptionForUserKey(bytes32 userKey) view public returns (bytes32){
+        require(validUserKey(userKey));
+        return userKeyVotingHistoryLog[userKey];
+    }
 
 
     function validVotingOption(bytes32 option) view public returns (bool) {
@@ -38,6 +46,16 @@ contract Voting {
         }
         return false;
     }
+
+    function validUserKey(bytes32 userKey) view public returns (bool) {
+        for (uint i = 0; i < userKeysUsedForVoting.length; i++) {
+            if (userKeysUsedForVoting[i] == userKey) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 
     function setVotingName(bytes32 newVotingName) public {
