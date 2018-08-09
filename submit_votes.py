@@ -7,7 +7,6 @@ import settings
 from web3 import Web3
 from web3.contract import ConciseContract
 
-# todo create rest api app where voting options and submitted votes and voting name can be passed
 VOTING_OPTIONS = [b'Matyas', b'Luciano', b'Miguel']
 VOTES_RECEIVED_TOTAL = [1, 2, 0]
 USER_KEYS_USED = [b'leppvi12', b'uupal1by', b'mzcwxi85']

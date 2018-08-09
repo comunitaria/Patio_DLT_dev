@@ -16,12 +16,14 @@ contract Voting {
         votingOptions = votingOptionsForTopic;
         votesReceived = votesReceivedForTopic;
         userKeysUsedForVoting = userKeysForOptions;
-        
+
+        require(votingOptionsForTopic.length == votesReceivedForTopic.length);
         uint votingOptionsForTopicLength = votingOptionsForTopic.length;
         for (uint i=0; i<votingOptionsForTopicLength; i++) {
             votesReceivedPerOption[votingOptionsForTopic[i]] = votesReceivedForTopic[i];
         }
 
+        require(userKeysForOptions.length == votedOptionsForUserKeys.length);
         uint votedOptionsForUserKeysLength = votedOptionsForUserKeys.length;
         for (uint v=0; i<votedOptionsForUserKeysLength; v++){
             userKeyVotingHistoryLog[userKeysForOptions[v]] = votedOptionsForUserKeys[v];
