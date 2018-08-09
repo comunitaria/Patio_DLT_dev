@@ -8,18 +8,26 @@ contract Voting {
     bytes32[] public userKeysUsedForVoting;
     mapping (bytes32 => uint8) public votesReceivedPerOption;
     mapping (bytes32 => bytes32) public userKeyVotingHistoryLog;
+
     bytes32 public votingName;
 
     function Voting(bytes32[] votingOptionsForTopic, uint8[] votesReceivedForTopic,
-        bytes32[] userKeysUsedForVotingForTopic, bytes32 votingNameForTopic) public {
+        bytes32[] userKeysForOptions, bytes32[] votedOptionsForUserKeys, bytes32 votingNameForTopic) public {
         votingOptions = votingOptionsForTopic;
         votesReceived = votesReceivedForTopic;
-        userKeysUsedForVoting = userKeysUsedForVotingForTopic;
-        uint arrayLength = votingOptionsForTopic.length;
-        for (uint i=0; i<arrayLength; i++) {
+        userKeysUsedForVoting = userKeysForOptions;
+        
+        uint votingOptionsForTopicLength = votingOptionsForTopic.length;
+        for (uint i=0; i<votingOptionsForTopicLength; i++) {
             votesReceivedPerOption[votingOptionsForTopic[i]] = votesReceivedForTopic[i];
-            userKeyVotingHistoryLog[userKeysUsedForVotingForTopic[i]] = votingOptionsForTopic[i];
         }
+
+        uint votedOptionsForUserKeysLength = votedOptionsForUserKeys.length;
+        for (uint v=0; i<votedOptionsForUserKeysLength; v++){
+            userKeyVotingHistoryLog[userKeysForOptions[v]] = votedOptionsForUserKeys[v];
+
+        }
+
         votingName = votingNameForTopic;
     }
 
