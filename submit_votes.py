@@ -10,7 +10,7 @@ from web3.contract import ConciseContract
 VOTING_OPTIONS = [b'Matyas', b'Luciano', b'Miguel']
 VOTES_RECEIVED_TOTAL = [1, 2, 0]
 USER_KEYS_USED = [b'leppvi12', b'uupal1by', b'mzcwxi85']
-VOTED_OPTIONS_= [b'Matyas',  b'Luciano',  b'Luciano']
+VOTED_OPTIONS = [b'Matyas',  b'Luciano',  b'Luciano']
 VOTING_NAME = b'Comunitaria teset vote '
 
 
@@ -31,11 +31,12 @@ Voting = w3.eth.contract(abi=contract_abi, bytecode=contract_byte_code)
 
 
 # Submit the transaction that deploys the contract
-tx_hash = Voting.constructor(VOTING_OPTIONS, VOTES_RECEIVED_TOTAL, USER_KEYS_USED, VOTED_OPTIONS_,VOTING_NAME).transact()
+tx_hash = Voting.constructor(VOTING_OPTIONS, VOTES_RECEIVED_TOTAL, USER_KEYS_USED, VOTED_OPTIONS,
+                             VOTING_NAME).transact()
 
 # Wait for the transaction to be mined, and get the transaction receipt
 tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash)
-print ( "Deployed. gasUsed={gasUsed} contractAddress={contractAddress}".format(**tx_receipt) ) # added by me
+print ( "Deployed. gasUsed={gasUsed} contractAddress={contractAddress}".format(**tx_receipt) )
 
 # Create the contract instance with the newly-deployed address
 voting = w3.eth.contract(
