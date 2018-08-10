@@ -25,7 +25,7 @@ contract Voting {
 
         require(userKeysForOptions.length == votedOptionsForUserKeys.length);
         uint votedOptionsForUserKeysLength = votedOptionsForUserKeys.length;
-        for (uint v=0; i<votedOptionsForUserKeysLength; v++){
+        for (uint v=0; v<votedOptionsForUserKeysLength; v++){
             userKeyVotingHistoryLog[userKeysForOptions[v]] = votedOptionsForUserKeys[v];
 
         }

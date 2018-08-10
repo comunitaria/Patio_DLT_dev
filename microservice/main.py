@@ -64,8 +64,11 @@ def process_voting():
     data = request.json
     voting_options = data['voting_options']
     voting_options = [bytes(option, 'utf-8') for option in voting_options]
-    submitted_votes = data['submitted_votes']
+    votes_count = data['votes_count']
     user_keys_used = data['user_keys_used']
+    user_keys_used = [bytes(k, 'utf-8') for k in user_keys_used]
+    votes_submitted = data['votes_submitted']
+    votes_submitted = [bytes(option, 'utf-8') for option in votes_submitted]
     voting_name = bytes(data['voting_name'], 'utf-8')
 
     # Get contract code
@@ -85,7 +88,9 @@ def process_voting():
     
     # Submit the transaction that deploys the contract
     tx_hash = Voting.constructor(voting_options,
-                                 submitted_votes,
+                                 votes_count,
+                                 user_keys_used,
+                                 votes_submitted,
                                  voting_name).transact()
 
     # Wait for the transaction to be mined, and get the transaction receipt
@@ -123,7 +128,11 @@ def get_attr():
         return voting.functions.getVotingName().call()
     elif attr == 'votes':
         option = bytes(data['option'], 'utf-8')
-        return voting.functions.getFullAmountOfVotesForOption(option).call()
+        return str(voting.functions.getFullAmountOfVotesForOption(option).call())
+    elif attr == 'voted_option':
+        k = bytes(data['userkey'], 'utf-8')
+        result = voting.functions.getVotedOptionForUserKey(k).call()
+        return result.decode('utf-8')
 
 
 if __name__ == '__main__':
