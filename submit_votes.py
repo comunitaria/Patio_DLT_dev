@@ -22,9 +22,14 @@ contract_abi = get_contract_abi(compiled_contract, 'Voting.sol')
 # web3.py instance
 provider_to_use = get_eth_provider(settings.NETWORK_TO_USE)
 w3 = Web3(provider_to_use)
-
+if settings.NETWORK_TO_USE == 'rinkeby':
+    # this is necessary because of the special consensus mechanism of rinkeby:
+    # https://web3py.readthedocs.io/en/stable/middleware.html#geth-style-proof-of-authority
+    from web3.middleware import geth_poa_middleware
+    # inject the poa compatibility middleware to the innermost layer
+    w3.middleware_stack.inject(geth_poa_middleware, layer=0)
 # set pre-funded account as sender
-w3.eth.defaultAccount = w3.eth.accounts[0]
+w3.eth.defaultAccount = w3.eth.accounts[5]
 
 # Instantiate and deploy contract
 Voting = w3.eth.contract(abi=contract_abi, bytecode=contract_byte_code)
