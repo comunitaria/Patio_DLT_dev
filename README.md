@@ -45,4 +45,4 @@ then attach a javascript console to it:
 # How to change the direction of the socket file of  the ethereum node
 * add the flag --ipcpath "/my/custom/path/to/geth.ipc"
 * e.g : `geth --password ./unlock_credentials.txt --unlock 0x83b2cbd2345e805f39face47bcf840af5ddfda4b --rinkeby --light --ipcpath "/tmp/rinkeby/geth.ipc"`
-* **make sure that the custom ipcpath matches the path that you have defined in the RINKEBY_SOCKET_FILE_PATH or MAINNET_SOCKET_FILE_PATH setting**
+* **make sure that the custom ipcpath matches the path that you have defined in the RINKEBY_SOCKET_FILE_PATH or MAINNET_SOCKET_FILE_PATH setting** (the ipc file only exists as long as geth is running)
