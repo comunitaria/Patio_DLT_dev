@@ -29,7 +29,7 @@ if settings.NETWORK_TO_USE == 'rinkeby':
     # inject the poa compatibility middleware to the innermost layer
     w3.middleware_stack.inject(geth_poa_middleware, layer=0)
 # set pre-funded account as sender
-w3.eth.defaultAccount = w3.eth.accounts[5]
+w3.eth.defaultAccount = w3.eth.accounts[settings.ETHER_WALLET_ID_TO_USE]
 
 # Instantiate and deploy contract
 Voting = w3.eth.contract(abi=contract_abi, bytecode=contract_byte_code)
