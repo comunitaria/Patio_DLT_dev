@@ -79,13 +79,19 @@ def process_voting():
     # web3.py instance
     provider_to_use = get_provider()
     w3 = Web3(provider_to_use)
+    if settings.NETWORK_TO_USE == 'rinkeby':
+        # this is necessary because of the special consensus mechanism of rinkeby:
+        # https://web3py.readthedocs.io/en/stable/middleware.html#geth-style-proof-of-authority
+        from web3.middleware import geth_poa_middleware
+        # inject the poa compatibility middleware to the innermost layer
+        w3.middleware_stack.inject(geth_poa_middleware, layer=0)
 
     # set pre-funded account as sender
-    w3.eth.defaultAccount = w3.eth.accounts[0]
+    w3.eth.defaultAccount = w3.eth.accounts[settings.ETHER_WALLET_ID_TO_USE]
 
     # Instantiate and deploy contract
     Voting = w3.eth.contract(abi=contract_abi, bytecode=contract_byte_code)
-    
+
     # Submit the transaction that deploys the contract
     tx_hash = Voting.constructor(voting_options,
                                  votes_count,

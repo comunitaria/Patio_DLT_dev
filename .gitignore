@@ -71,3 +71,8 @@ fabric.properties
 .idea/httpRequests
 
 node_password.txt
+unlock_credentials.txt
+
+__pycache__/
+utils/__pycache__/
+
