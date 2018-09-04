@@ -142,4 +142,5 @@ if __name__ == '__main__':
         debug=True
     )
 
+# gunicorn -w 2 -b 0.0.0.0:5500 microservice:app
 
