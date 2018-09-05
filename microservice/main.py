@@ -52,8 +52,8 @@ def get_provider():
         try:
             web3prov = get_eth_provider(settings.NETWORK_TO_USE)
             g.web3prov = web3prov
-        except OSError:
-            return Web3.HTTPProvider('http://127.0.0.1:8545')
+        except OSError as e:
+            raise e # return Web3.HTTPProvider('http://127.0.0.1:8545')
     return g.web3prov
 
 
@@ -122,7 +122,7 @@ def get_attr():
     w3 = Web3(provider_to_use)
 
     # set pre-funded account as sender
-    w3.eth.defaultAccount = w3.eth.accounts[0]
+    w3.eth.defaultAccount = w3.eth.accounts[settings.ETHER_WALLET_ID_TO_USE]
 
     # Create the contract instance with the deployed address
     voting = w3.eth.contract(
