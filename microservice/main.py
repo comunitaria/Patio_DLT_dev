@@ -41,11 +41,6 @@ def requires_auth(f):
     return decorated
 # End aux
 
-@app.teardown_appcontext
-def close_connection(exception):
-    if hasattr(g, 'web3prov'):
-        del g.web3prov
-
 
 @app.route('/')
 def hello_world():
@@ -107,7 +102,6 @@ def process_voting():
     # Wait for the transaction to be mined, and get the transaction receipt
     tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash)
 
-    del g.web3prov
     return tx_receipt.contractAddress
 
 
