@@ -9,11 +9,13 @@ contract ProviderRating {
         bytes32 name;
         bytes32 providerPostalAddress;
         bytes32 providerIdentificationNumber;
+        bool isValue;
     }
 
     struct User {
         bytes32 userName;
         bytes32 surveyKey;
+        bool isValue; //https://ethereum.stackexchange.com/questions/13021/how-can-you-figure-out-if-a-certain-key-exists-in-a-mapping-struct-defined-insi
     }
 
     struct Rating {
@@ -47,7 +49,6 @@ contract ProviderRating {
             var newUser = users[_surveyKey];
             newUser.userName = _userName;
             newUser.surveyKey = _surveyKey;
-            newUser.push(_surveyKey);
             userToUseForRating = newUser;
 
         }
@@ -65,7 +66,7 @@ contract ProviderRating {
         }
         // todo generate hash from _providerIdentificationNumber + _userName and check if this hash already exists
         // todo in the ratings mapping, if so it is a duplicate submission and should not be allowed.
-        generatedHashFromProviderIdAndUserName = 4;
+        generatedHashFromProviderIdAndUserName = _surveyKey; // todo generate and set the real hash here
         var newRating = ratings[generatedHashFromProviderIdAndUserName];
         newRating.author = userToUseForRating;
         newRating.provider = providerToUseForRating;
@@ -74,8 +75,8 @@ contract ProviderRating {
         ratingHashes.push(generatedHashFromProviderIdAndUserName);
     }
 
-    function getRatingHashes() view public returns(bytes32[]) {
-        return ratingHashes;
+    function getRatingByRatingHash(bytes32 ratingHash) view public returns(uint) {
+        return ratingHashes[ratingHash].score;
     }
 
 }
