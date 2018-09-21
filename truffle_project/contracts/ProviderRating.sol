@@ -13,7 +13,6 @@ contract ProviderRating {
     }
 
     struct User {
-        bytes32 userName;
         bytes32 surveyKey;
         bool isValue; //https://ethereum.stackexchange.com/questions/13021/how-can-you-figure-out-if-a-certain-key-exists-in-a-mapping-struct-defined-insi
     }
@@ -26,20 +25,22 @@ contract ProviderRating {
     }
 
     mapping (bytes32 => Provider) providers; // we map the providers through their identification number
-    address[] public providerIdentificationNumbers;
+    mapping(bytes32 => User) users;
+    mapping(bytes32 => Rating) ratings; // we map the ratings through a hash string that gets created out of the
+
+
 
     // the key for the users that voted is the survey key that they used
-    mapping(bytes32 => User) users;
     bytes32[] public surveyKeys;
-
-    mapping(bytes32 => Rating) ratings; // we map the ratings through a hash string that gets created out of the
-    // provider.providerIdentificationNumber + user.surveyKey
     bytes32[] ratingHashes;
+    address[] public providerIdentificationNumbers;
 
-    function rateProvider(bytes32 _userName, bytes32 _surveyKey, bytes32 _providerName, bytes32 _providerPostalAddress, bytes32 _providerIdentificationNumber, uint _score, bytes32 _comment) public {
-        // todo assure that the hash from _providerName + _surveyKey does not exist in the ratings mapping yet
+
+    // provider.providerIdentificationNumber + user.surveyKey
+
+    function rateProvider(bytes32 _surveyKey, bytes32 hashOfProviderNameAndSurveyKey, bytes32 _providerName, bytes32 _providerPostalAddress, bytes32 _providerIdentificationNumber, uint _score, bytes32 _comment) public {
+        // it is faster and costs less gas to compute the hash of of the providerName and the SurveyKey on the client and pass it to this function rather than to securely compute it here
         User userToUseForRating;
-        bytes32 generatedHashFromProviderIdAndUserName;
 
         // we check if the user that voted already exists in our storage
         if(users[_surveyKey].isValue){
@@ -47,7 +48,6 @@ contract ProviderRating {
         }else{
         // we create a new user
             var newUser = users[_surveyKey];
-            newUser.userName = _userName;
             newUser.surveyKey = _surveyKey;
             userToUseForRating = newUser;
 
@@ -66,17 +66,16 @@ contract ProviderRating {
         }
         // todo generate hash from _providerIdentificationNumber + _userName and check if this hash already exists
         // todo in the ratings mapping, if so it is a duplicate submission and should not be allowed.
-        generatedHashFromProviderIdAndUserName = _surveyKey; // todo generate and set the real hash here
-        var newRating = ratings[generatedHashFromProviderIdAndUserName];
+        var newRating = ratings[hashOfProviderNameAndSurveyKey];
         newRating.author = userToUseForRating;
         newRating.provider = providerToUseForRating;
         newRating.score = _score;
         newRating.comment = _comment;
-        ratingHashes.push(generatedHashFromProviderIdAndUserName);
+        ratingHashes.push(hashOfProviderNameAndSurveyKey);
     }
 
-    function getRatingByRatingHash(bytes32 ratingHash) view public returns(uint) {
-        return ratingHashes[ratingHash].score;
+    function getRatingForProviderNameAndSurveyKeyHash(bytes32 ratingHash) view public returns(uint) {
+        return ratings[ratingHash].score;
     }
 
 }
