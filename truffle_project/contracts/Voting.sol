@@ -27,7 +27,6 @@ contract Voting {
         uint votedOptionsForUserKeysLength = votedOptionsForUserKeys.length;
         for (uint v=0; v<votedOptionsForUserKeysLength; v++){
             userKeyVotingHistoryLog[userKeysForOptions[v]] = votedOptionsForUserKeys[v];
-
         }
 
         votingName = votingNameForTopic;
