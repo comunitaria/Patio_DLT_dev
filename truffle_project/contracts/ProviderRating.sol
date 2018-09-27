@@ -8,8 +8,7 @@ contract ProviderRating {
     }
     struct Provider {
         bytes32 name;
-        string providerPostalAddress; // we use a string data type here because bytes32 can only fit 32 characters (addresses might be longer)
-        bytes32 providerIdentificationNumber;
+        address providerInformationSmartContract; // --> this smart contract contains the geohash of the provider and more
         bool isValue;
     }
 
