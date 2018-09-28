@@ -7,7 +7,7 @@ contract Provider {
     string providerPostalAddress;
     bytes32 providerIdentificationNumber;
 
-    // geohash of up 10 characters
+    // geohash of up to 10 characters
     function Provider(bytes8 _geohash, bytes32 _providerName, string _providerPostalAddress,
         bytes32 _providerIdentificationNumber){
 

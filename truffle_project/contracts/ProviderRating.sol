@@ -71,8 +71,6 @@ contract ProviderRating {
         // we create a new Provider
             var newProvider = providers[_providerIdentificationNumber];
             newProvider.name = _providerName;
-            newProvider.providerPostalAddress = _providerPostalAddress;
-            newProvider.providerIdentificationNumber = _providerIdentificationNumber;
             newProvider.isValue = true;
             providerToUseForRating = newProvider;
         }
