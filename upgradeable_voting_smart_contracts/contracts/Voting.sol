@@ -1,6 +1,7 @@
 pragma solidity ^0.4.0;
+import "zos-lib/contracts/migrations/Migratable.sol";
 
-contract Voting {
+contract Voting is Migratable{
 
     struct Vote {
         bytes32 votingName;
@@ -15,18 +16,19 @@ contract Voting {
     mapping (bytes32 => Vote) votingRegistry; // this is the registry where the results of all the votes are saved
     // mapped by the name of the voting
 
-    function Voting(){
+    function initialize(){
 
     }
 
 
     function submitNewVoting(bytes32[] votingOptionsForTopic, uint8[] votesReceivedForTopic,
         bytes32[] userKeysForOptions, bytes32[] votedOptionsForUserKeys, bytes32 votingNameForTopic) public {
-
+        Vote storage newVote; // memory would be better here but it is impossible due to evm restrictions:
+        // https://ethereum.stackexchange.com/questions/36365/member-x-is-not-available-in-struct-y-memory-outside-of-storage
 
         require(votingOptionsForTopic.length == votesReceivedForTopic.length);
         require(userKeysForOptions.length == votedOptionsForUserKeys.length);
-        var newVote = votingRegistry[votingNameForTopic];
+        newVote = votingRegistry[votingNameForTopic];
         uint votingOptionsForTopicLength = votingOptionsForTopic.length;
         for (uint i=0; i<votingOptionsForTopicLength; i++) {
             newVote.votesReceivedPerOption[votingOptionsForTopic[i]] = votesReceivedForTopic[i];
@@ -42,6 +44,26 @@ contract Voting {
 
         votingRegistry[votingNameForTopic] = newVote;
 
+    }
+    function validUserKey(bytes32 userKey, bytes32 votingName) view public returns (bool) {
+        if(!votingRegistry[votingName].isValue){
+            return false;
+        }
+        bytes32[] memory votingToAnalyzeUserKeysUsedForVotings = votingRegistry[votingName].userKeysUsedForVoting;
+        for (uint i = 0; i < votingToAnalyzeUserKeysUsedForVotings.length; i++) {
+            if (votingToAnalyzeUserKeysUsedForVotings[i] == userKey) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    function getVotedOptionForUserKeyForVoting(bytes32 userKey, bytes32 votingName) view public returns (bytes32){
+        require(votingRegistry[votingName].isValue);
+        require(validUserKey(userKey, votingName));
+
+        return votingRegistry[votingName].userKeyVotingHistoryLog[userKey];
     }
 
 }
