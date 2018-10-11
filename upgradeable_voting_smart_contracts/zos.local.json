@@ -1,0 +1,29 @@
+{
+  "contracts": {
+    "MyContract": {
+      "address": "0x9fbda871d559710256a2502a2517b794b482db40",
+      "constructorCode": "608060405234801561001057600080fd5b50610b0d806100206000396000f300",
+      "bodyBytecodeHash": "5e3dfac30d68a24318b552615209854becfcf0fc097b3a00d2d5bc707f7272fd",
+      "bytecodeHash": "632d16b5ff1ddffe0a8c70cb89daf506be0cce0fe769269c85718df76dbaf314"
+    }
+  },
+  "proxies": {
+    "MyContract": [
+      {
+        "address": "0xb0d834bdc0e626302b9ffad1d2461b677e1cb974",
+        "version": "0.1.0",
+        "implementation": "0x9fbda871d559710256a2502a2517b794b482db40"
+      }
+    ]
+  },
+  "app": {
+    "address": "0x8f0483125fcb9aaaefa9209d8e9d7b9c8b9fb90f"
+  },
+  "version": "0.1.0",
+  "package": {
+    "address": "0xf12b5dd4ead5f743c6baa640b0216200e89b60da"
+  },
+  "provider": {
+    "address": "0x345ca3e014aaf5dca488057592ee47305d9b3e10"
+  }
+}
