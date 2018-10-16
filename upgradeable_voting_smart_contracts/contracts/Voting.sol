@@ -66,4 +66,8 @@ contract Voting is Migratable{
         return votingRegistry[votingName].userKeyVotingHistoryLog[userKey];
     }
 
+    function test(bytes32 name) view public returns (uint32){
+        return 5;
+    }
+
 }

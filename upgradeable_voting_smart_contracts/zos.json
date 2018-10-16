@@ -2,7 +2,6 @@
   "name": "comunitaria-voting-upgradeable",
   "version": "0.1.0",
   "contracts": {
-    "MyContract": "MyContract",
     "Voting": "Voting"
   }
 }
