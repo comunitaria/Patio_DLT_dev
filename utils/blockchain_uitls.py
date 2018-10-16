@@ -2,6 +2,7 @@ from web3 import Web3, HTTPProvider
 import os
 import settings
 from solc import compile_source
+import json
 
 
 def get_eth_provider(provider_name):
@@ -15,6 +16,14 @@ def get_eth_provider(provider_name):
     }
 
     return eth_providers[provider_name]
+
+
+def get_compiled_contract_abi():
+    PATH_TRUFFLE_WK = '/home/myUserName/Projects/myEthereumProjet/'
+    truffleFile = json.load(open(PATH_TRUFFLE_WK + '/build/contracts/myContractName.json'))
+
+    abi = truffleFile['abi']
+    bytecode = truffleFile['bytecode']
 
 
 def get_compiled_code(contract_name):
