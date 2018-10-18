@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "zos": "^1.4.3"
+    "zos": "^1.4.3",
+    "zos-lib": "^1.4.1"
   }
 }
