@@ -15,6 +15,7 @@ contract Voting is Migratable{
 
     mapping (bytes32 => Vote) votingRegistry; // this is the registry where the results of all the votes are saved
     // mapped by the name of the voting
+    bytes32[] votingNames;
 
     function initialize(){
 
@@ -28,6 +29,7 @@ contract Voting is Migratable{
 
         require(votingOptionsForTopic.length == votesReceivedForTopic.length);
         require(userKeysForOptions.length == votedOptionsForUserKeys.length);
+        votingNames.push(votingNameForTopic);
         newVote = votingRegistry[votingNameForTopic];
         uint votingOptionsForTopicLength = votingOptionsForTopic.length;
         for (uint i=0; i<votingOptionsForTopicLength; i++) {
@@ -66,8 +68,32 @@ contract Voting is Migratable{
         return votingRegistry[votingName].userKeyVotingHistoryLog[userKey];
     }
 
-    function test(bytes32 name) view public returns (uint32){
-        return 5;
+    function getNumberOfSubmittedVotings() view public returns (uint256){
+        return votingNames.length;
+    }
+
+    function getVotingNameAtIndex(uint32 index) view public returns (bytes32){
+        return votingNames[index];
+    }
+
+    function getRegistryIndexForVotingName(bytes32 votingName) view public returns(uint256){
+        bool memory foundIndex = false;
+        for(uint i=0;i<votingNames.length;i++){
+            if(votingNames[i] == votingName){
+                foundIndex = false;
+                return i;
+            }
+        }
+        require(foundIndex);
+    }
+
+    function getUserKeyForVotingNameAtIndex(bytes32 votingName, uint32 index) view public returns (bytes32){
+
+        return votingRegistry[votingName].userKeysUsedForVoting[index];
+    }
+
+    function getFullAmountOfVotesForOptionForVoting(bytes32 votingName, bytes32 votedOption) view public returns (uint256){
+        return votingRegistry[votingName].votesReceivedPerOption[votedOption];
     }
 
 }

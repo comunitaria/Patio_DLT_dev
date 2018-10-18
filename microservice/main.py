@@ -12,6 +12,7 @@ from utils.blockchain_uitls import get_eth_provider
 from utils.blockchain_uitls import get_compiled_code
 from utils.blockchain_uitls import get_contract_abi
 from utils.blockchain_uitls import get_contract_bytecode
+from utils.blockchain_uitls import get_compiled_contract_abi
 
 # solc package in host is required.
 
@@ -72,9 +73,8 @@ def process_voting():
     voting_name = bytes(data['voting_name'], 'utf-8')
 
     # Get contract code
-    compiled_contract = get_compiled_code('Voting.sol')
-    contract_byte_code = get_contract_bytecode(compiled_contract, 'Voting.sol')
-    contract_abi = get_contract_abi(compiled_contract, 'Voting.sol')
+    compiled_contract_abi = get_compiled_contract_abi('Voting.json')
+    check_summed_contract_address = Web3.toChecksumAddress(settings.UPGRADABLE_VOTING_PROXY_SMART_CONTRACT_ADDRESS)
 
     # web3.py instance
     provider_to_use = get_provider()
@@ -90,14 +90,16 @@ def process_voting():
     w3.eth.defaultAccount = w3.eth.accounts[settings.ETHER_WALLET_ID_TO_USE]
 
     # Instantiate and deploy contract
-    Voting = w3.eth.contract(abi=contract_abi, bytecode=contract_byte_code)
+    Voting = w3.eth.contract(
+        address=check_summed_contract_address,
+        abi=compiled_contract_abi,
+    )
 
-    # Submit the transaction that deploys the contract
-    tx_hash = Voting.constructor(voting_options,
-                                 votes_count,
-                                 user_keys_used,
-                                 votes_submitted,
-                                 voting_name).transact()
+    tx_hash = Voting.functions.submitNewVoting(voting_options,
+                                               votes_count,
+                                               user_keys_used,
+                                               votes_submitted,
+                                               voting_name).transact()
 
     # Wait for the transaction to be mined, and get the transaction receipt
     tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash)
@@ -113,9 +115,9 @@ def get_attr():
     attr = data['attr']
 
     # Get contract code
-    compiled_contract = get_compiled_code('Voting.sol')
-    contract_byte_code = get_contract_bytecode(compiled_contract, 'Voting.sol')
-    contract_abi = get_contract_abi(compiled_contract, 'Voting.sol')
+    # Get contract code
+    compiled_contract_abi = get_compiled_contract_abi('Voting.json')
+    check_summed_contract_address = Web3.toChecksumAddress(settings.UPGRADABLE_VOTING_PROXY_SMART_CONTRACT_ADDRESS)
 
     # web3.py instance
     provider_to_use = get_provider()
@@ -126,18 +128,25 @@ def get_attr():
 
     # Create the contract instance with the deployed address
     voting = w3.eth.contract(
-        address=data['contract_address'],
-        abi=contract_abi,
+        address=check_summed_contract_address,
+        abi=compiled_contract_abi,
     )
 
     if attr == 'name':
-        return voting.functions.getVotingName().call()
+        registry_index_for_voting_name = voting.functions.getRegistryIndexForVotingName(attr).call()
+        return voting.functions.getVotingNameAtIndex(registry_index_for_voting_name).call()
     elif attr == 'votes':
+        # todo the voting name has to be passed here as well (because it is the key for the saved voting in our
+        # todo voting registry
+        voting_name = 'should be passed here'
         option = bytes(data['option'], 'utf-8')
-        return str(voting.functions.getFullAmountOfVotesForOption(option).call())
+        return str(voting.functions.getFullAmountOfVotesForOptionForVoting(voting_name, option).call())
     elif attr == 'voted_option':
+        # todo the voting name has to be passed here as well (because it is the key for the saved voting in our
+        # todo voting registry
+        voting_name = 'should be passed here'
         k = bytes(data['userkey'], 'utf-8')
-        result = voting.functions.getVotedOptionForUserKey(k).call()
+        result = voting.functions.getVotedOptionForUserKeyForVoting(k, voting_name).call()
         return result.decode('utf-8')
 
 

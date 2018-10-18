@@ -42,9 +42,14 @@ tx_hash = voting.functions.submitNewVoting(VOTING_OPTIONS, VOTES_RECEIVED_TOTAL,
 # Wait for transaction to be mined...
 w3.eth.waitForTransactionReceipt(tx_hash)
 
-c = 5
 
-print('voted option for user key and name  is: {}'.format(
-    voting.functions.getVotedOptionForUserKeyForVoting(b'leppvi12', b'test vote' ).call()
-))
+number_of_existing_votings = voting.functions.getNumberOfSubmittedVotings().call()
+print("votings saved in blockchain:")
+for index in range(0, number_of_existing_votings-1):
+    voting_name = voting.functions.getVotingNameAtIndex(index).call()
+    user_key = voting.functions.getUserKeyForVotingNameAtIndex(voting_name, index).call()
+    voted_option = voting.functions.getVotedOptionForUserKeyForVoting(user_key, voting_name).call()
+    full_amount_of_votes_for_option_for_voting = voting.functions.getFullAmountOfVotesForOptionForVoting(voting_name, voted_option).call()
+    print("voting with name {}: user key {} voted option {}".format(voting_name.decode("utf-8") , user_key.decode("utf-8") , voted_option.decode("utf-8") ))
+
 
