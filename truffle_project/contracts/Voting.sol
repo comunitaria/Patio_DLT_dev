@@ -1,64 +1,57 @@
 pragma solidity ^0.4.0;
+import "zos-lib/contracts/migrations/Migratable.sol";
 
-contract Voting {
-    // solidity cannot save a dictionary directly in the constructor this is why we have to create it
-    // with the help of 2 arrays
-    bytes32[] public votingOptions;
-    uint8[] public votesReceived;
-    bytes32[] public userKeysUsedForVoting;
-    mapping (bytes32 => uint8) public votesReceivedPerOption;
-    mapping (bytes32 => bytes32) public userKeyVotingHistoryLog;
+contract Voting is Migratable{
 
-    bytes32 public votingName;
+    struct Vote {
+        bytes32 votingName;
+        bytes32[] votingOptions;
+        bytes32[] userKeysUsedForVoting;
+        mapping(bytes32 => uint8) votesReceivedPerOption;
+        mapping (bytes32 => bytes32) userKeyVotingHistoryLog;
+        bool isValue;
 
-    function Voting(bytes32[] votingOptionsForTopic, uint8[] votesReceivedForTopic,
+    }
+
+    mapping (bytes32 => Vote) votingRegistry; // this is the registry where the results of all the votes are saved
+    // mapped by the name of the voting
+
+    function initialize(){
+
+    }
+
+
+    function submitNewVoting(bytes32[] votingOptionsForTopic, uint8[] votesReceivedForTopic,
         bytes32[] userKeysForOptions, bytes32[] votedOptionsForUserKeys, bytes32 votingNameForTopic) public {
-        votingOptions = votingOptionsForTopic;
-        votesReceived = votesReceivedForTopic;
-        userKeysUsedForVoting = userKeysForOptions;
+        Vote storage newVote; // memory would be better here but it is impossible due to evm restrictions:
+        // https://ethereum.stackexchange.com/questions/36365/member-x-is-not-available-in-struct-y-memory-outside-of-storage
 
         require(votingOptionsForTopic.length == votesReceivedForTopic.length);
+        require(userKeysForOptions.length == votedOptionsForUserKeys.length);
+        newVote = votingRegistry[votingNameForTopic];
         uint votingOptionsForTopicLength = votingOptionsForTopic.length;
         for (uint i=0; i<votingOptionsForTopicLength; i++) {
-            votesReceivedPerOption[votingOptionsForTopic[i]] = votesReceivedForTopic[i];
+            newVote.votesReceivedPerOption[votingOptionsForTopic[i]] = votesReceivedForTopic[i];
         }
-
-        require(userKeysForOptions.length == votedOptionsForUserKeys.length);
         uint votedOptionsForUserKeysLength = votedOptionsForUserKeys.length;
         for (uint v=0; v<votedOptionsForUserKeysLength; v++){
-            userKeyVotingHistoryLog[userKeysForOptions[v]] = votedOptionsForUserKeys[v];
+            newVote.userKeyVotingHistoryLog[userKeysForOptions[v]] = votedOptionsForUserKeys[v];
         }
+        newVote.votingOptions = votingOptionsForTopic;
+        newVote.userKeysUsedForVoting = userKeysForOptions;
+        newVote.votingName = votingNameForTopic;
+        newVote.isValue = true;
 
-        votingName = votingNameForTopic;
+        votingRegistry[votingNameForTopic] = newVote;
+
     }
-
-    //  note: the most convenient thing would be to return the whole votes and voting history mapping.
-    //  there is a limitation in the ethereum evm that does not allow us to do this.
-    //  At the moment there's no way to enumerate the elements in a mapping. In order to know what to return,
-    //  Solidity would need to keep track of all of the keys that have been used, which it does not do
-    //  because of this we can only return the votes one by one by accessing the mapping directly
-    function getFullAmountOfVotesForOption(bytes32 option) view public returns (uint8){
-        require(validVotingOption(option));
-        return votesReceivedPerOption[option];
-    }
-    function getVotedOptionForUserKey(bytes32 userKey) view public returns (bytes32){
-        require(validUserKey(userKey));
-        return userKeyVotingHistoryLog[userKey];
-    }
-
-
-    function validVotingOption(bytes32 option) view public returns (bool) {
-        for (uint i = 0; i < votingOptions.length; i++) {
-            if (votingOptions[i] == option) {
-                return true;
-            }
+    function validUserKey(bytes32 userKey, bytes32 votingName) view public returns (bool) {
+        if(!votingRegistry[votingName].isValue){
+            return false;
         }
-        return false;
-    }
-
-    function validUserKey(bytes32 userKey) view public returns (bool) {
-        for (uint i = 0; i < userKeysUsedForVoting.length; i++) {
-            if (userKeysUsedForVoting[i] == userKey) {
+        bytes32[] memory votingToAnalyzeUserKeysUsedForVotings = votingRegistry[votingName].userKeysUsedForVoting;
+        for (uint i = 0; i < votingToAnalyzeUserKeysUsedForVotings.length; i++) {
+            if (votingToAnalyzeUserKeysUsedForVotings[i] == userKey) {
                 return true;
             }
         }
@@ -66,12 +59,15 @@ contract Voting {
     }
 
 
+    function getVotedOptionForUserKeyForVoting(bytes32 userKey, bytes32 votingName) view public returns (bytes32){
+        require(votingRegistry[votingName].isValue);
+        require(validUserKey(userKey, votingName));
 
-    function setVotingName(bytes32 newVotingName) public {
-        votingName = newVotingName;
+        return votingRegistry[votingName].userKeyVotingHistoryLog[userKey];
     }
 
-    function getVotingName() view public returns (bytes32) {
-        return votingName;
+    function test(bytes32 name) view public returns (uint32){
+        return 5;
     }
+
 }

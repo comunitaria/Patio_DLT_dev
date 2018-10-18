@@ -10,7 +10,7 @@ from functools import wraps
 
 from utils.blockchain_uitls import get_eth_provider
 from utils.blockchain_uitls import get_compiled_code
-from utils.blockchain_uitls import get_contract_abi
+from utils.blockchain_uitls import get_contract_abi, get_compiled_contract_abi
 from utils.blockchain_uitls import get_contract_bytecode
 
 # solc package in host is required.
@@ -72,9 +72,9 @@ def process_voting():
     voting_name = bytes(data['voting_name'], 'utf-8')
 
     # Get contract code
-    compiled_contract = get_compiled_code('Voting.sol')
-    contract_byte_code = get_contract_bytecode(compiled_contract, 'Voting.sol')
-    contract_abi = get_contract_abi(compiled_contract, 'Voting.sol')
+    # compiled_contract = get_compiled_code('Voting.sol')
+    # contract_byte_code = get_contract_bytecode(compiled_contract, 'Voting.sol')
+    # contract_abi = get_contract_abi(compiled_contract, 'Voting.sol')
 
     # web3.py instance
     provider_to_use = get_provider()
@@ -89,11 +89,21 @@ def process_voting():
     # set pre-funded account as sender
     w3.eth.defaultAccount = w3.eth.accounts[settings.ETHER_WALLET_ID_TO_USE]
 
-    # Instantiate and deploy contract
-    Voting = w3.eth.contract(abi=contract_abi, bytecode=contract_byte_code)
+    # Instantiate contract
+    # Voting = w3.eth.contract(abi=contract_abi, bytecode=contract_byte_code)
+
+    # Get compiled contract code
+    compiled_contract_abi = get_compiled_contract_abi('Voting.json')
+
+    check_summed_contract_address = Web3.toChecksumAddress(settings.UPGRADABLE_VOTING_PROXY_SMART_CONTRACT_ADDRESS)
+
+    voting_contract = w3.eth.contract(
+        address=check_summed_contract_address,
+        abi=compiled_contract_abi,
+    )
 
     # Submit the transaction that deploys the contract
-    tx_hash = Voting.constructor(voting_options,
+    tx_hash = voting_contract.functions.submitNewVoting(voting_options,
                                  votes_count,
                                  user_keys_used,
                                  votes_submitted,
@@ -101,8 +111,8 @@ def process_voting():
 
     # Wait for the transaction to be mined, and get the transaction receipt
     tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash)
-
-    return tx_receipt.contractAddress
+    tx_hash = tx_receipt.transactionHash
+    return tx_hash.hex()
 
 
 @app.route('/get_voting_attr', methods=['POST'])
@@ -113,9 +123,9 @@ def get_attr():
     attr = data['attr']
 
     # Get contract code
-    compiled_contract = get_compiled_code('Voting.sol')
-    contract_byte_code = get_contract_bytecode(compiled_contract, 'Voting.sol')
-    contract_abi = get_contract_abi(compiled_contract, 'Voting.sol')
+    # compiled_contract = get_compiled_code('Voting.sol')
+    # contract_byte_code = get_contract_bytecode(compiled_contract, 'Voting.sol')
+    # contract_abi = get_contract_abi(compiled_contract, 'Voting.sol')
 
     # web3.py instance
     provider_to_use = get_provider()
@@ -124,20 +134,29 @@ def get_attr():
     # set pre-funded account as sender
     w3.eth.defaultAccount = w3.eth.accounts[settings.ETHER_WALLET_ID_TO_USE]
 
+    # Get compiled contract code
+    compiled_contract_abi = get_compiled_contract_abi('Voting.json')
+
+    check_summed_contract_address = Web3.toChecksumAddress(settings.UPGRADABLE_VOTING_PROXY_SMART_CONTRACT_ADDRESS)
+
     # Create the contract instance with the deployed address
+    # voting = w3.eth.contract(
+    #    address=data['contract_address'],
+    #    abi=contract_abi,
+    # )
+
     voting = w3.eth.contract(
-        address=data['contract_address'],
-        abi=contract_abi,
+        address=check_summed_contract_address,
+        abi=compiled_contract_abi,
     )
 
-    if attr == 'name':
-        return voting.functions.getVotingName().call()
-    elif attr == 'votes':
+    if attr == 'votes':
         option = bytes(data['option'], 'utf-8')
         return str(voting.functions.getFullAmountOfVotesForOption(option).call())
     elif attr == 'voted_option':
         k = bytes(data['userkey'], 'utf-8')
-        result = voting.functions.getVotedOptionForUserKey(k).call()
+        voting_name = bytes(data['voting_name'], 'utf-8')
+        result = voting.functions.getVotedOptionForUserKeyForVoting(k, voting_name).call()
         return result.decode('utf-8')
 
 
@@ -149,4 +168,5 @@ if __name__ == '__main__':
     )
 
 # gunicorn -w 2 -b 0.0.0.0:5500 microservice:app
+# nohup gunicorn -w 1 -b 0.0.0.0:5500 microservice:app  --log-file /tmp/gunicorn_error.log &
 

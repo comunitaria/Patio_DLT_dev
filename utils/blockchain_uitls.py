@@ -2,6 +2,7 @@ from web3 import Web3, HTTPProvider
 import os
 import settings
 from solc import compile_source
+import json
 
 
 def get_eth_provider(provider_name):
@@ -15,6 +16,21 @@ def get_eth_provider(provider_name):
     }
 
     return eth_providers[provider_name]
+
+
+def get_compiled_contract_abi(contract_name):
+    contract_abi_file_location = os.path.join(settings.CONTRACTS_ABI_FOLDER, contract_name)
+    contract_file = json.load(open(contract_abi_file_location))
+    abi = contract_file['abi']
+
+    return abi
+
+
+def get_compiled_contract_bytecode(contract_name):
+    contract_abi_file_location = os.path.join(settings.CONTRACTS_ABI_FOLDER, contract_name)
+    contract_file = json.load(open(contract_abi_file_location))
+    bytecode = contract_file['bytecode']
+    return bytecode
 
 
 def get_compiled_code(contract_name):
