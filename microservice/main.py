@@ -116,7 +116,6 @@ def get_attr():
     attr = data['attr']
 
     # Get contract code
-    # Get contract code
     compiled_contract_abi = get_compiled_contract_abi('Voting.json')
     check_summed_contract_address = Web3.toChecksumAddress(settings.UPGRADABLE_VOTING_PROXY_SMART_CONTRACT_ADDRESS)
 
