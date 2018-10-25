@@ -1,0 +1,15 @@
+{
+  "name": "comunitaria_voting_upgradeable",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "zos": "^1.4.3",
+    "zos-lib": "^1.4.1"
+  }
+}
