@@ -1,4 +1,5 @@
 # How to work with the upgradeable smart contract infrastructure:
+install the zos framework in the project: `npm install --global zos`
 ### if you deploy the smart contract for the first time
 * start (or connect to) a blockchain. --> For local development run the command truffle develop
 * create your the smart contract (e.g Voting.sol)

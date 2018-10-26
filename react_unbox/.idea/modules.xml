@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/comunitaria_escrow_sample.iml" filepath="$PROJECT_DIR$/.idea/comunitaria_escrow_sample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/react_unbox.iml" filepath="$PROJECT_DIR$/.idea/react_unbox.iml" />
     </modules>
   </component>
 </project>
