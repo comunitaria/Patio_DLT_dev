@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import SimpleEscrowContract from '../build/contracts/SimpleEscrow.json'
+import SimpleEscrowContract from '../../build/contracts/SimpleEscrow.json'
 import getWeb3 from './utils/getWeb3'
 
 import './css/oswald.css'
