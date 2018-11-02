@@ -1,0 +1,63 @@
+.voteWrapper {
+  border: 1px solid black;
+}
+
+.voteTitle {
+  font-weight: bolder;
+  text-align: center;
+}
+
+.titleInput {
+  margin: 0 auto;
+  display: block;
+}
+
+.removeButton {
+  float: right;
+  margin-right: 50px;
+}
+
+.itemWrapper {
+  overflow: hidden;
+}
+
+.itemWrapper:hover {
+  background: silver;
+}
+
+.itemTitle {
+  display: inline-block;
+  padding-left: 50px;
+}
+
+.voteButtons {
+  float: right;
+  margin-right: 50px;
+}
+
+.voteButton {
+}
+
+.votedText {
+  float: right;
+  margin-right: 50px;
+}
+
+.itemCount {
+  font-weight: bold;
+  float: right;
+  margin-right: 50px;
+}
+
+.errorMessage {
+  color: red;
+  font-weight: bold;
+}
+
+.expansionInput {
+  margin-left: 50px;
+}
+
+.buttonWrapper {
+  text-align: center;
+}

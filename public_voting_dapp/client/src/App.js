@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
 import SimpleEscrowContract from '../../build/contracts/SimpleEscrow.json'
+import VotingContract from '../../build/contracts/Voting.json'
+
 import getWeb3 from './utils/getWeb3'
 
 import './css/oswald.css'
@@ -41,10 +43,10 @@ class App extends Component {
             })
     }
 
-    instantiateContract() {
+        instantiateContract() {
 
         const contract = require('truffle-contract')
-        const SimpleEscrow = contract(SimpleEscrowContract)
+        const SimpleEscrow = contract(VotingContract)
         SimpleEscrow.setProvider(this.state.web3.currentProvider)
 
         // Declaring this for later so we can chain functions on SimpleEscrow.
@@ -53,6 +55,7 @@ class App extends Component {
         // Get accounts.
         this.state.web3.eth.getAccounts((error, accounts) => {
             SimpleEscrow.deployed().then((instance) => {
+                console.log('found deployed voting contract: ', instance);
                 SimpleEscrowInstance = instance;
                 this.setState({simpleEscrowInstance: instance});
                 this.setState({accounts: accounts});
@@ -99,13 +102,13 @@ class App extends Component {
         return (
             <div className="App">
                 <nav className="navbar pure-menu pure-menu-horizontal">
-                    <a href="#" className="pure-menu-heading pure-menu-link">Solidity Escrow</a>
+                    <a href="#" className="pure-menu-heading pure-menu-link">Comunitaria Public Voting</a>
                 </nav>
 
                 <main className="container">
                     <div className="pure-g">
                         <div className="pure-u-1-1">
-                            <h1>Simple Escrow</h1>
+                            <h1>Existing Votes (Saved on the Ethereum Blockchain)</h1>
                             <p><strong>buyer address: {this.state.buyerAddress} </strong></p>
                             <p><strong>seller address: {this.state.sellerAddress} </strong></p>
                             <p><strong>your adress is: {this.state.addressOfCurrentWallet} </strong></p>

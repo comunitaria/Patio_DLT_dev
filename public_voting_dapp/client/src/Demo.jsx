@@ -1,10 +1,10 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import App from './App'
+import React from 'react';
+import { render } from 'react-dom';
+import { AppContainer } from 'react-hot-loader';
 import ReactVote from './ReactVote';
-import styles from './App.css';
+import styles from './Demo.css';
 
-console.log('got styles: ', styles);
+const rootNode = document.getElementById('demo');
 const basicCss = {
   voteWrapper: styles.voteWrapper,
   voteTitle: styles.voteTitle,
@@ -61,22 +61,34 @@ const onDownvote = (data, diff) => {
 };
 const isAdmin = () => true;
 
-ReactDOM.render(
-  <App />,
-  document.getElementById('root')
+const DOMRender = RV => (
+  render(
+    <AppContainer>
+      <div>
+        <RV
+          styles={basicCss}
+          onCreate={onCreate}
+          onUpvote={onUpvote}
+          onClose={onClose}
+          onEdit={onEdit}
+          onDownvote={onDownvote}
+          onExpand={onExpand}
+          onReset={onReset}
+          clientId="zerocho"
+          isAdmin={isAdmin()}
+        />
+
+      </div>
+    </AppContainer>,
+    rootNode,
+  )
 );
-ReactDOM.render(
-    <ReactVote
-      styles={styles}
-      onCreate={onCreate}
-      onUpvote={onUpvote}
-      onClose={onClose}
-      onEdit={onEdit}
-      onDownvote={onDownvote}
-      onExpand={onExpand}
-      onReset={onReset}
-      clientId="zerocho"
-      isAdmin={isAdmin()}
-    />,
-    document.getElementById('vote')
-)
+
+DOMRender(ReactVote);
+
+if (module.hot) {
+  module.hot.accept('./ReactVote', () => {
+    const nextRV = require('./ReactVote').default;
+    DOMRender(nextRV);
+  });
+}

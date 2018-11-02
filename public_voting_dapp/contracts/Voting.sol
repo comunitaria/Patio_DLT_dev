@@ -1,7 +1,6 @@
 pragma solidity ^0.4.0;
-import "zos-lib/contracts/migrations/Migratable.sol";
-
-contract Voting is Migratable{
+//import "zos-lib/contracts/Initializable.sol";
+contract Voting{ //is Initializable{
 
     struct Vote {
         bytes32 votingName;
@@ -77,7 +76,7 @@ contract Voting is Migratable{
     }
 
     function getRegistryIndexForVotingName(bytes32 votingName) view public returns(uint256){
-        bool memory foundIndex = false;
+        var foundIndex = false;
         for(uint i=0;i<votingNames.length;i++){
             if(votingNames[i] == votingName){
                 foundIndex = false;
