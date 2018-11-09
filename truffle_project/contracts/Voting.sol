@@ -76,16 +76,16 @@ contract Voting is Migratable{
         return votingNames[index];
     }
 
-    function getRegistryIndexForVotingName(bytes32 votingName) view public returns(uint256){
-        bool memory foundIndex = false;
-        for(uint i=0;i<votingNames.length;i++){
-            if(votingNames[i] == votingName){
-                foundIndex = false;
-                return i;
-            }
-        }
-        require(foundIndex);
-    }
+//    function getRegistryIndexForVotingName(bytes32 votingName) view public returns(uint256){
+//        bool memory foundIndex = false;
+//        for(uint i=0;i<votingNames.length;i++){
+//            if(votingNames[i] == votingName){
+//                foundIndex = false;
+//                return i;
+//            }
+//        }
+//        require(foundIndex);
+//    }
 
     function getUserKeyForVotingNameAtIndex(bytes32 votingName, uint32 index) view public returns (bytes32){
 
