@@ -2,26 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ed997dd8-0d8b-4e86-b6e1-a06b33eaef36" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/client/src/Demo.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/Demo.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/ReactVote.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/components/CreationItems.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/components/CreationView.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/components/ExpansionInput.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/components/VoteItems.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/react-voting-frontend" beforeDir="false" afterPath="$PROJECT_DIR$/client/react-voting-frontend" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/react-voting-frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/react-voting-frontend/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/react-voting-frontend/src/Demo.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/react-voting-frontend/src/Demo.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/react-voting-frontend/src/components/CreationView.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/react-voting-frontend/src/components/CreationView.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/scripts/webpack.config.dev.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/scripts/webpack.config.dev.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/App.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/2_deploy_contracts.js" beforeDir="false" afterPath="$PROJECT_DIR$/migrations/2_deploy_contracts.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/zos.json" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -71,7 +55,7 @@
     <session id="-627550910">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="4" />
+          <entry key="project.closed" value="5" />
           <entry key="project.open.time.12" value="1" />
           <entry key="project.open.time.16" value="1" />
           <entry key="project.open.time.18" value="1" />

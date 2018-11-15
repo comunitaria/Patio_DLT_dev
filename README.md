@@ -1,10 +1,13 @@
 # How to work with the upgradeable smart contract infrastructure:
-install the zos framework in the project: `npm install --global zos`
+install the zos framework in the project: `npm install zos`
 ### if you deploy the smart contract for the first time
 * start (or connect to) a blockchain. --> For local development run the command truffle develop
 * create your the smart contract (e.g Voting.sol)
 * then register this smart contract to zos with the command `zos add Voting`
-* then push this configuration the the blockchain where an upgradable infrastructure will be created with the following command `zos push --network local`
+* then run or connect to a blockchain. If you are running a local blockchain run `ganache-cli --port 9545 --deterministic`
+* Then we start the session to work with a desired network. `zos session --network local --from 0x1df62f291b2e969fb0849d99d9ce41e2f137006e --expires 3600` 
+
+* then push this configuration the the blockchain where an upgradable infrastructure will be created with the following command `zos push` (it will be pushed to the network that the session was started with)
 * the command above created a proxy smart contract that calls a voting Smart Contract at a given address with the function that it gets passed. If we want to update our logic the logic smart contract gets replaced (and a new address will be created). The we set the new address in the proxy smart contract
 * now we can create an upgradable instance of our smart contract with the command: `zos create Voting --init initialize --network local`
 * safe the proxy address of the output of the command above and set it in the variable `UPGRADABLE_VOTING_PROXY_SMART_CONTRACT_ADDRESS` in the settings of the microservice (settings.py of the microservice) 
@@ -13,7 +16,7 @@ install the zos framework in the project: `npm install --global zos`
 * the address of the proxy contract stays the same we do not have to update our microservices settings. 
 
 ### if you changed the logic of the smart contract and want to deploy a new version
-* recompile the new version of the smart contract with the command `zos push --network local`
+* recompile the new version of the smart contract with the command `zos push` (we push to the network that was defined in the session above)
 * and then we set the new instance of our smart contract to our proxy contract with the following command: zos update Voting --network local
 * the address of the proxy contract stays the same we do not have to update our microservices settings. 
 

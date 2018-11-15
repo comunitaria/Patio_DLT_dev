@@ -3,6 +3,8 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/loom_network_project" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/public_voting_dapp" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/public_voting_dapp/client/react-voting-frontend" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/truffle-dappchain-example" vcs="Git" />
   </component>
 </project>

@@ -8,10 +8,9 @@ NETWORK_TO_USE = 'local'  # choose between 'local' --> ganache (use this if you 
 CONTRACTS_FOLDER = contracts_folder = os.path.join(os.path.join(project_directory, 'truffle_project'), 'contracts')
 CONTRACTS_ABI_FOLDER = os.path.join(
     os.path.join(os.path.join(project_directory, 'truffle_project'), 'build'), 'contracts')
-print(CONTRACTS_ABI_FOLDER)
 
-ETHER_WALLET_ID_TO_USE = 0
+ETHER_WALLET_ID_TO_USE = 9
 
-UPGRADABLE_VOTING_PROXY_SMART_CONTRACT_ADDRESS = '0xb742f3242a0bea9d19076f8357da10184782ce1b'
+UPGRADABLE_VOTING_PROXY_SMART_CONTRACT_ADDRESS = '0x5d18ded3c0a476fcbc9e67fc1c613cfc5dd0d34b'
 PROVIDER_RATING_CONTRACT_EXISTING_ON_BLOCKCHAIN = False
 PROVIDER_RATING_CONTRACT_ADDRESS = '0x8DA7eB4Ec3A4c1291797e13DB723f9046afF4a1C'
