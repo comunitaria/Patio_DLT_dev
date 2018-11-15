@@ -1,5 +1,5 @@
 {
-  "name": "comunitaria-public-voting",
+  "name": "comunitaria-voting-upgradeable",
   "version": "0.1.0",
   "contracts": {
     "Voting": "Voting"

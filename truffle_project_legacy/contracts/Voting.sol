@@ -1,6 +1,5 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.4.0;
 import "zos-lib/contracts/Initializable.sol";
-
 contract Voting is Initializable{
 
     struct Vote {

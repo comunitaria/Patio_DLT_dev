@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/upgradeable_voting_smart_contracts.iml" filepath="$PROJECT_DIR$/.idea/upgradeable_voting_smart_contracts.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/zos_v2.iml" filepath="$PROJECT_DIR$/.idea/zos_v2.iml" />
     </modules>
   </component>
 </project>
