@@ -7,7 +7,15 @@
       "bytecodeHash": "adf2b2ec4c704de135dc8c4ba2e029cbe6867afe582a82b9fc62c2326d1ef71a"
     }
   },
-  "proxies": {},
+  "proxies": {
+    "Voting": [
+      {
+        "address": "0xe48d3271a3de7e51eaa2f70dd50b2aa20d4c638e",
+        "version": "0.1.0",
+        "implementation": "0x6fe6ffcd4dde9db11f887bd3320424ccab50ee3f"
+      }
+    ]
+  },
   "app": {
     "address": "0x5d18ded3c0a476fcbc9e67fc1c613cfc5dd0d34b"
   },

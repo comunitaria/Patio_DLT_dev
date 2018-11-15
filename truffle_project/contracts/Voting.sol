@@ -1,6 +1,7 @@
 pragma solidity ^0.4.24;
+import "zos-lib/contracts/Initializable.sol";
 
-contract Voting {
+contract Voting is Initializable{
 
     struct Vote {
         bytes32 votingName;
@@ -16,7 +17,7 @@ contract Voting {
     // mapped by the name of the voting
     bytes32[] votingNames;
 
-    function Voting(){
+    function initialize(){
 
     }
 
