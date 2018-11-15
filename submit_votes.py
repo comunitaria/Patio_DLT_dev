@@ -28,7 +28,8 @@ w3.eth.defaultAccount = w3.eth.accounts[settings.ETHER_WALLET_ID_TO_USE]
 
 compiled_contract_abi = get_compiled_contract_abi('Voting.json')
 
-check_summed_contract_address = Web3.toChecksumAddress('0xa8f70571907fae3c8e7eaef5573098905c2852d49dd592d12fbeaa39564736be')
+check_summed_contract_address = Web3.toChecksumAddress(settings.UPGRADABLE_VOTING_PROXY_SMART_CONTRACT_ADDRESS)
+
 voting = w3.eth.contract(
     address=check_summed_contract_address,
     abi=compiled_contract_abi,

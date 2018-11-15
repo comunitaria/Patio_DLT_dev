@@ -11,13 +11,13 @@ install the zos framework in the project: `npm install zos`
 * the command above created a proxy smart contract that calls a voting Smart Contract at a given address with the function that it gets passed. If we want to update our logic the logic smart contract gets replaced (and a new address will be created). The we set the new address in the proxy smart contract
 * now we can create an upgradable instance of our smart contract with the command: `zos create Voting --init initialize --network local`
 * safe the proxy address of the output of the command above and set it in the variable `UPGRADABLE_VOTING_PROXY_SMART_CONTRACT_ADDRESS` in the settings of the microservice (settings.py of the microservice) 
-* now after we changed the logic of our smart we have to deploy the new version of the smart contract with the following command `zos push --network local`
-* and then we set the new instance of our smart contract to our proxy contract with the following command: zos update Voting --network local
+* now after we changed the logic of our smart we have to deploy the new version of the smart contract with the following command `zos pus`
+* and then we set the new instance of our smart contract to our proxy contract with the following command: zos update Voting
 * the address of the proxy contract stays the same we do not have to update our microservices settings. 
 
 ### if you changed the logic of the smart contract and want to deploy a new version
 * recompile the new version of the smart contract with the command `zos push` (we push to the network that was defined in the session above)
-* and then we set the new instance of our smart contract to our proxy contract with the following command: zos update Voting --network local
+* and then we set the new instance of our smart contract to our proxy contract with the following command: zos update Voting
 * the address of the proxy contract stays the same we do not have to update our microservices settings. 
 
 # Important if you are running a local blockchain the upgradable infrastructure gets deleted after you stop the blockchain. If you restart the blockchain delete the file zos.local.json and follow the steps described in deploy the smart contract for the first time to redeploy the smart contract with zos
