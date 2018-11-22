@@ -1,7 +1,9 @@
-pragma solidity ^0.4.24;
-import "zos-lib/contracts/Initializable.sol";
-
-contract Voting is Initializable{
+pragma solidity ^0.4.22;
+contract Voting{
+    // This is the "same" Smart Contract As Voting.sol but Voting.sol uses the upgradable smart contract syntax
+    // from zeppelin os (2.0.) You can copy and paste this smart contract code to a remix solidity compiler and
+    // load the deployed smart contract (on rinkeby or the mainnet) from within the browser at the direction that is
+    // saved in settings.UPGRADABLE_VOTING_PROXY_SMART_CONTRACT_ADDRESS
 
     struct Vote {
         bytes32 votingName;
@@ -17,14 +19,13 @@ contract Voting is Initializable{
     // mapped by the name of the voting
     bytes32[] votingNames;
 
-    function initialize(){
-
+    constructor () public{
     }
 
 
-    function submitNewVoting(bytes32[] votingOptionsForTopic, uint8[] votesReceivedForTopic,
-        bytes32[] userKeysForOptions, bytes32[] votedOptionsForUserKeys, bytes32 votingNameForTopic) public {
-        Vote storage newVote; // memory would be better here but it is impossible due to evm restrictions:
+    function submitNewVoting(bytes32[] memory votingOptionsForTopic, uint8[] memory votesReceivedForTopic,
+        bytes32[] memory userKeysForOptions, bytes32[] memory votedOptionsForUserKeys, bytes32 votingNameForTopic) public {
+        Vote storage newVote ; // memory would be better here but it is impossible due to evm restrictions:
         // https://ethereum.stackexchange.com/questions/36365/member-x-is-not-available-in-struct-y-memory-outside-of-storage
 
         require(votingOptionsForTopic.length == votesReceivedForTopic.length);
@@ -76,17 +77,6 @@ contract Voting is Initializable{
         return votingNames[index];
     }
 
-//    function getRegistryIndexForVotingName(bytes32 votingName) view public returns(uint256){
-//        bool memory foundIndex = false;
-//        for(uint i=0;i<votingNames.length;i++){
-//            if(votingNames[i] == votingName){
-//                foundIndex = false;
-//                return i;
-//            }
-//        }
-//        require(foundIndex);
-//    }
-
     function getUserKeyForVotingNameAtIndex(bytes32 votingName, uint32 index) view public returns (bytes32){
 
         return votingRegistry[votingName].userKeysUsedForVoting[index];
@@ -94,10 +84,6 @@ contract Voting is Initializable{
 
     function getFullAmountOfVotesForOptionForVoting(bytes32 votingName, bytes32 votedOption) view public returns (uint256){
         return votingRegistry[votingName].votesReceivedPerOption[votedOption];
-    }
-
-    function addedFunction() view public returns (uint256){
-        return 5;
     }
 
 }
