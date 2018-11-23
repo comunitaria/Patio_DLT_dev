@@ -53,7 +53,7 @@ then attach a javascript console to it:
 * check your account balances again in the geth javascript console
 * `checkAllBalances();`
 * now we need to run our local node with an unlocked account (that means that the node has full access to the wallet and can spend ether when needed) **Make sure that the node does not accept connections through HTTP otherwise the ether of that account could be stolen**: https://blog.ethereum.org/2015/08/29/security-alert-insecurely-configured-geth-can-make-funds-remotely-accessible/
-* run your local geth node with the unlocked account : `geth --password ./unlock_credentials.txt --unlock 32eee519e85bdc238853db5cb0d38671780fa062(REPLACE WITH YOUR ACCOUNTADDRESS) --rinkeby --light`
+* run your local geth node with the unlocked account : `geth --password ./unlock_credentials.txt --unlock 32eee519e85bdc238853db5cb0d38671780fa062(REPLACE WITH YOUR ACCOUNTADDRESS) --rinkeby --light --rpc`
 * next add the Voting smart Contract 
 * `zos add Voting
 * now we tell zos to start a session in the rinkeby testnet with a specific ethereum wallet (the one that we unlocked in our previous geth command)
@@ -69,5 +69,5 @@ then attach a javascript console to it:
 
 # How to change the direction of the socket file of  the ethereum node
 * add the flag --ipcpath "/my/custom/path/to/geth.ipc"
-* e.g : `geth --password ./unlock_credentials.txt --unlock 0x83b2cbd2345e805f39face47bcf840af5ddfda4b --rinkeby --light --ipcpath "/tmp/rinkeby/geth.ipc"`
+* e.g : `geth --password ./unlock_credentials.txt --unlock 0x83b2cbd2345e805f39face47bcf840af5ddfda4b --rinkeby --light --ipcpath "/tmp/rinkeby/geth.ipc" --rpc`
 * **make sure that the custom ipcpath matches the path that you have defined in the RINKEBY_SOCKET_FILE_PATH or MAINNET_SOCKET_FILE_PATH setting** (the ipc file only exists as long as geth is running)
