@@ -55,6 +55,14 @@ def get_provider():
     return g.web3prov
 
 
+@app.route('/get_etherscan_address_of_voting_smart_contract', methods=['GET'])
+@requires_auth
+def get_etherscan_address_of_voting_smart_contract():
+    if settings.NETWORK_TO_USE == 'rinkeby':
+        return 'https://rinkeby.etherscan.io/address/{}'.format(settings.UPGRADABLE_VOTING_PROXY_SMART_CONTRACT_ADDRESS)
+    return 'https://etherscan.io/address/{}'.format(settings.UPGRADABLE_VOTING_PROXY_SMART_CONTRACT_ADDRESS)
+
+
 @app.route('/process_voting', methods=['POST'])
 @requires_auth
 def process_voting():
