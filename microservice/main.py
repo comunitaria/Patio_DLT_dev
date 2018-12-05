@@ -116,8 +116,9 @@ def process_voting():
                                  voting_name).transact()
 
     # Wait for the transaction to be mined, and get the transaction receipt
-    tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash)
-    tx_hash = tx_receipt.transactionHash
+    # tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash)
+    # tx_hash = tx_receipt.transactionHash
+    print(tx_hash.hex())
     return tx_hash.hex()
 
 
@@ -178,6 +179,6 @@ if __name__ == '__main__':
     )
 
 # gunicorn -w 2 -b 0.0.0.0:5500 microservice:app
-# nohup gunicorn -w 1 -b 0.0.0.0:5500 microservice:app  --log-file /tmp/gunicorn_error.log &
+# nohup gunicorn -w 1 -b 0.0.0.0:5500 microservice:app --timeout 3600  --log-file /tmp/gunicorn_error.log &
 
 
