@@ -1,9 +1,9 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.5.1;
 pragma experimental ABIEncoderV2;
 
 contract ProviderRating {
 
-    function ProviderRating(){
+    constructor() public{
 
     }
     struct Provider {
@@ -48,49 +48,46 @@ contract ProviderRating {
         return false;
     }
 
-    function rateProvider(bytes32 _surveyKey, bytes32 hashOfProviderNameAndSurveyKey, bytes32 _providerName, string _providerPostalAddress, bytes32 _providerIdentificationNumber, uint _score, string _comment) public {
+    function rateProvider(bytes32 _surveyKey, bytes32 hashOfProviderNameAndSurveyKey, bytes32 _providerName, string memory _providerPostalAddress, bytes32 _providerIdentificationNumber, uint _score, string memory _comment) public {
         // it is faster and costs less gas to compute the hash of of the providerName and the SurveyKey on the client and pass it to this function rather than to securely compute it here
 
 
-        User userToUseForRating;
+        User memory userToUseForRating;
         // we check if the user that voted already exists in our storage
         if(users[_surveyKey].isValue){
             userToUseForRating = users[_surveyKey];
         }else{
         // we create a new user
-            var newUser = users[_surveyKey];
-            newUser.surveyKey = _surveyKey;
-            newUser.isValue = true;
-            userToUseForRating = newUser;
+            users[_surveyKey].surveyKey = _surveyKey;
+            users[_surveyKey].isValue = true;
+            userToUseForRating = users[_surveyKey];
 
         }
-        Provider providerToUseForRating;
+        Provider memory providerToUseForRating;
         // we check if the provider that got a review already exists in our storage
         if(providers[_providerIdentificationNumber].isValue){
             providerToUseForRating = providers[_providerIdentificationNumber];
         }else{
         // we create a new Provider
-            var newProvider = providers[_providerIdentificationNumber];
-            newProvider.name = _providerName;
-            newProvider.providerPostalAddress = _providerPostalAddress;
-            newProvider.providerIdentificationNumber = _providerIdentificationNumber;
-            newProvider.isValue = true;
-            providerToUseForRating = newProvider;
+            providers[_providerIdentificationNumber].name = _providerName;
+            providers[_providerIdentificationNumber].providerPostalAddress = _providerPostalAddress;
+            providers[_providerIdentificationNumber].providerIdentificationNumber = _providerIdentificationNumber;
+            providers[_providerIdentificationNumber].isValue = true;
+            providerToUseForRating = providers[_providerIdentificationNumber];
         }
         if(ratings[hashOfProviderNameAndSurveyKey].isValue){
             revert(); // duplicate submission this should not be allowed
         }else{
-            var newRating = ratings[hashOfProviderNameAndSurveyKey];
-            newRating.author = userToUseForRating;
-            newRating.provider = providerToUseForRating;
-            newRating.score = _score;
-            newRating.comment = _comment;
-            newRating.isValue = true;
+            ratings[hashOfProviderNameAndSurveyKey].author = userToUseForRating;
+            ratings[hashOfProviderNameAndSurveyKey].provider = providerToUseForRating;
+            ratings[hashOfProviderNameAndSurveyKey].score = _score;
+            ratings[hashOfProviderNameAndSurveyKey].comment = _comment;
+            ratings[hashOfProviderNameAndSurveyKey].isValue = true;
             ratingHashes.push(hashOfProviderNameAndSurveyKey);
         }
 
     }
-    function getRatingAuthorKeyForRatingHash(bytes32 ratingHash)  public constant returns(bytes32){
+    function getRatingAuthorKeyForRatingHash(bytes32 ratingHash)  public view returns(bytes32){
         return ratings[ratingHash].author.surveyKey;
 
     }
@@ -98,7 +95,7 @@ contract ProviderRating {
         return ratings[ratingHash].provider.name;
 
     }
-    function getRatingCommentForRatingHash(bytes32 ratingHash) view public returns (string){
+    function getRatingCommentForRatingHash(bytes32 ratingHash) view public returns (string memory){
         return ratings[ratingHash].comment;
 
     }
