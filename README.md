@@ -33,7 +33,7 @@ this will create your account and return the address of the created account.
 * save this address.
 * now we check the balance of the account:
 * first start the geth node on rinkeby:
-*  `geth --rinkeby --light` (this could take a while)
+*  `geth --rinkeby --syncmode light` (this could take a while)
 then attach a javascript console to it:
 *  `geth --rinkeby attach`
 * define this utility function: (just copy paste it into the console):
