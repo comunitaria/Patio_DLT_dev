@@ -71,3 +71,28 @@ then attach a javascript console to it:
 * add the flag --ipcpath "/my/custom/path/to/geth.ipc"
 * e.g : `geth --password ./unlock_credentials.txt --unlock 0x83b2cbd2345e805f39face47bcf840af5ddfda4b --rinkeby --light --ipcpath "/tmp/rinkeby/geth.ipc" --rpc`
 * **make sure that the custom ipcpath matches the path that you have defined in the RINKEBY_SOCKET_FILE_PATH or MAINNET_SOCKET_FILE_PATH setting** (the ipc file only exists as long as geth is running)
+
+
+
+# Provider Ratings:
+when developing: 
+start a local development blockchain in the folder provider_ratings:
+`truffle develop`
+
+**normally compilation and deployment is handled through teh webservice**
+**to deploy a new version of the smart contract run the script submit_ratings.py (or the corresponding webservice call)**
+
+if you want to migrate and deploy the smart contract during development mode with truffle you can run the commands:
+`truffle compile`
+`truffle migrate --reset` 
+while a local blockchain is running on your machine
+
+**how to deploy the smart contract to rinkeby**:
+start a geth node with an unlocked account on the rinkeby testnet:
+`geth --password ./unlock_credentials.txt --unlock 0xyourPubicKeyofYourUnlockedAccount --rinkeby --syncmode light --ipcpath "/tmp/rinkeby/geth.ipc" --rpc`
+<br>
+change the `NETWORK_TO_USE` setting to `rinkeby` in the `settings.py` file
+
+**if you have problems with your solc version**:
+refer to this workaround: 
+https://github.com/ethereum/py-solc/issues/61

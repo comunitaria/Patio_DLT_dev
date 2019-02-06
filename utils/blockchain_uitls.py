@@ -34,7 +34,7 @@ def get_compiled_contract_bytecode(contract_name):
 
 
 def get_compiled_code(contract_name):
-    contract_location = os.path.join(settings.CONTRACTS_FOLDER, contract_name)
+    contract_location = os.path.join(settings.PROVIDER_RATINGS_CONTRACTS_FOLDER, contract_name)
     with open(contract_location) as file:
         source_code = file.readlines()
     compiled_code = compile_source(''.join(source_code))
