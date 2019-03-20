@@ -33,6 +33,15 @@ def get_compiled_contract_bytecode(contract_name):
     return bytecode
 
 
+def get_compiled_listabierta_smart_contract_code(contract_name):
+    contract_location = os.path.join(settings.LISTABIERTA_CONTRACTS_FOLDER, contract_name)
+    with open(contract_location) as file:
+        source_code = file.readlines()
+    compiled_code = compile_source(''.join(source_code))
+
+    return compiled_code
+
+
 def get_compiled_code(contract_name):
     contract_location = os.path.join(settings.PROVIDER_RATINGS_CONTRACTS_FOLDER, contract_name)
     with open(contract_location) as file:

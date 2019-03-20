@@ -8,6 +8,10 @@ from functools import wraps
 from utils.blockchain_uitls import get_eth_provider
 from utils.blockchain_uitls import  get_compiled_contract_abi
 
+from utils.blockchain_uitls import get_eth_provider
+from utils.blockchain_uitls import get_compiled_listabierta_smart_contract_code
+from utils.blockchain_uitls import get_contract_abi
+from utils.blockchain_uitls import get_contract_bytecode
 # solc package in host is required.
 
 app = Flask(__name__)
@@ -169,6 +173,81 @@ def get_attr():
         k = bytes(data['userkey'], 'utf-8')
         result = voting.functions.getVotedOptionForUserKeyForVoting(k, voting_name).call()
         return result.decode('utf-8')
+
+
+@app.route('/save_listabierta_voting_result', methods=['POST'])
+@requires_auth
+def save_listabierta_voting_result():
+    # Get data from request.json
+    data = request.json
+    unique_user_ids = data['unique_user_ids']
+    unique_user_hashes = data['unique_user_hashes']
+    user_ids_used_for_votes = data['user_ids_used_for_votes']
+    user_ids_used_for_votes_voted_candidate = data['user_ids_used_for_votes_voted_candidate']
+    user_ids_used_for_votes_points = data['user_ids_used_for_votes_points']
+    unique_candidate_ids = data['unique_candidate_ids']
+    unique_candidtate_names = data['unique_candidate_names']
+    voting_name = data['voting_name']
+    unique_user_hashes = [bytes(hash, 'utf-8') for hash in unique_user_hashes]
+    unique_candidtate_names = [bytes(name, 'utf-8') for name in unique_candidtate_names]
+    voting_name = bytes(voting_name, 'utf8')
+
+
+    provider_to_use = get_provider()
+
+    compiled_contract = get_compiled_listabierta_smart_contract_code('ListAbiertaVotingResult.sol')
+    contract_byte_code = get_contract_bytecode(compiled_contract, 'ListAbiertaVotingResult.sol')
+    contract_abi = get_contract_abi(compiled_contract, 'ListAbiertaVotingResult.sol')
+
+    # web3.py instance
+    w3 = Web3(provider_to_use)
+    if settings.NETWORK_TO_USE == 'rinkeby':
+        # this is necessary because of the special consensus mechanism of rinkeby:
+        # https://web3py.readthedocs.io/en/stable/middleware.html#geth-style-proof-of-authority
+        from web3.middleware import geth_poa_middleware
+        # inject the poa compatibility middleware to the innermost layer
+        w3.middleware_stack.inject(geth_poa_middleware, layer=0)
+    # set pre-funded account as sender
+    w3.eth.defaultAccount = w3.eth.accounts[settings.ETHER_WALLET_ID_TO_USE]
+
+    # we read the contract abi from the file system (it was deployed with the zos client)
+
+    if not settings.LISTABIERTA_VOTING_CONTRACT_EXISTING_ON_BLOCKCHAIN:
+
+        # Instantiate and deploy contract
+        ListAbiertaVotingResult = w3.eth.contract(abi=contract_abi, bytecode=contract_byte_code)
+
+        # Submit the transaction that deploys the contract
+        tx_hash = ListAbiertaVotingResult.constructor().transact()
+
+        # Wait for the transaction to be mined, and get the transaction receipt
+        tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash)
+        print("Deployed. gasUsed={gasUsed} contractAddress={contractAddress}".format(**tx_receipt))
+
+        # Create the contract instance with the newly-deployed address
+        voting_results = w3.eth.contract(
+            address=tx_receipt.contractAddress,
+            abi=contract_abi,
+        )
+
+    else:
+        print("Found existing smart contract deployed at: {}".format(settings.LISTABIERTA_VOTING_CONTRACT_ADDRESS))
+        voting_results = w3.eth.contract(
+            address=settings.LISTABIERTA_VOTING_CONTRACT_ADDRESS,
+            abi=contract_abi
+        )
+
+    print('Submitting voting name and results...')
+    tx_hash = voting_results.functions.submitNewVoting(
+        unique_user_ids, unique_user_hashes, user_ids_used_for_votes, user_ids_used_for_votes_voted_candidate,
+        user_ids_used_for_votes_points, unique_candidate_ids, unique_candidtate_names, voting_name).transact()
+
+
+    # Wait for the transaction to be mined, and get the transaction receipt
+    # tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash)
+    # tx_hash = tx_receipt.transactionHash
+    print(tx_hash.hex())
+    return tx_hash.hex()
 
 
 if __name__ == '__main__':
