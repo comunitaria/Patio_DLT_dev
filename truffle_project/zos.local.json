@@ -1,0 +1,29 @@
+{
+  "contracts": {
+    "Voting": {
+      "address": "0x6fe6ffcd4dde9db11f887bd3320424ccab50ee3f",
+      "constructorCode": "608060405234801561001057600080fd5b506109bf806100206000396000f300",
+      "bodyBytecodeHash": "f482036dd7c885b18db7fa239e99105e07c0b61e11ecf54083609646ee732f75",
+      "bytecodeHash": "f11088837b615d9b7439295e46e96a6c85c56d82f5a02298a82f667560fe8c68"
+    }
+  },
+  "proxies": {
+    "Voting": [
+      {
+        "address": "0xe48d3271a3de7e51eaa2f70dd50b2aa20d4c638e",
+        "version": "0.1.0",
+        "implementation": "0x6fe6ffcd4dde9db11f887bd3320424ccab50ee3f"
+      }
+    ]
+  },
+  "app": {
+    "address": "0x5d18ded3c0a476fcbc9e67fc1c613cfc5dd0d34b"
+  },
+  "version": "0.1.0",
+  "package": {
+    "address": "0xfa33c8ef8b5c4f3003361c876a298d1db61cca4e"
+  },
+  "provider": {
+    "address": "0xbe0b0f08a599f07699e98a9d001084e97b9a900a"
+  }
+}
