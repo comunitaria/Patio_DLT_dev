@@ -9,7 +9,7 @@ CONTRACTS_FOLDER = contracts_folder = os.path.join(os.path.join(project_director
 CONTRACTS_ABI_FOLDER = os.path.join(
     os.path.join(os.path.join(project_directory, 'truffle_project'), 'build'), 'contracts')
 
-ETHER_WALLET_ID_TO_USE = 7
+ETHER_WALLET_ID_TO_USE = 0
 
 UPGRADABLE_VOTING_PROXY_SMART_CONTRACT_ADDRESS = '0xbb60d495d500100c0be856d6d5cbea3b00fa07ac'
 PROVIDER_RATING_CONTRACT_EXISTING_ON_BLOCKCHAIN = False
