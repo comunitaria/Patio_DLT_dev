@@ -11,7 +11,7 @@ PROVIDER_RATINGS_CONTRACTS_FOLDER = os.path.join(os.path.join(project_directory,
 CONTRACTS_ABI_FOLDER = os.path.join(
     os.path.join(os.path.join(project_directory, 'truffle_project'), 'build'), 'contracts')
 LISTABIERTA_CONTRACTS_FOLDER = os.path.join(os.path.join(listabierta_project_directory, 'provider_ratings'), 'contracts')
-ETHER_WALLET_ID_TO_USE = 9  # (7 in local repo)
+ETHER_WALLET_ID_TO_USE = 0  # (7 in local repo)
 
 UPGRADABLE_VOTING_PROXY_SMART_CONTRACT_ADDRESS = '0xe48d3271a3de7e51eaa2f70dd50b2aa20d4c638e'
 PROVIDER_RATING_CONTRACT_EXISTING_ON_BLOCKCHAIN = False

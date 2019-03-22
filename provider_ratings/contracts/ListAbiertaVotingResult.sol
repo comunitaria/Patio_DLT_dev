@@ -99,7 +99,7 @@ contract ListAbiertaVotingResult{
         return votingRegistry[votingName].uniqueCandidateNames[1];
     }
 
-    function getVotedCandidateIdsForVoterIdForVoting(uint32 voterId, bytes32 votingName) public returns (uint256[]){
+    function getVotedCandidateIdsForVoterIdForVoting(uint32 voterId, bytes32 votingName) view public returns (uint256[]){
         uint256 numberOfVoterIdIndices = 0;
 
         for(uint i=0;i<votingRegistry[votingName].userIdsUsedForVote.length;i++){
@@ -126,7 +126,7 @@ contract ListAbiertaVotingResult{
         return votingResultsForVoterId;
     }
 
-    function getVotedCandidatePointsForVoterIdForVoting(uint32 voterId, bytes32 votingName) public returns (uint256[]){
+    function getVotedCandidatePointsForVoterIdForVoting(uint32 voterId, bytes32 votingName) view public returns (uint256[]){
         uint256 numberOfVoterIdIndices = 0;
 
         for(uint i=0;i<votingRegistry[votingName].userIdsUsedForVote.length;i++){
@@ -153,7 +153,7 @@ contract ListAbiertaVotingResult{
         return votingResultsForVoterId;
     }
 
-    function getCandidateNameForCandidateIdForVoting(uint256 candidateId, bytes32 votingName) public returns(bytes32){
+    function getCandidateNameForCandidateIdForVoting(uint256 candidateId, bytes32 votingName) view public returns(bytes32){
         bool foundCandidateId = false;
         uint256 candidateIndex = 0;
         for(uint i=0;i<votingRegistry[votingName].uniqueCandidateIds.length;i++){
@@ -166,7 +166,7 @@ contract ListAbiertaVotingResult{
         return votingRegistry[votingName].uniqueCandidateNames[candidateIndex];
     }
 
-        function getVoterIdForVoterHashForVoting(bytes32 voterHash, bytes32 votingName) public returns(uint32){
+        function getVoterIdForVoterHashForVoting(bytes32 voterHash, bytes32 votingName) view public returns(uint32){
         bool foundVoterId = false;
         uint256 voterIndex = 0;
         for(uint i=0;i<votingRegistry[votingName].uniqueUserHashes.length;i++){
