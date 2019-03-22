@@ -178,4 +178,9 @@ contract ListAbiertaVotingResult{
         require(foundVoterId);
         return votingRegistry[votingName].uniqueUserIds[voterIndex];
     }
+
+    function getTotalNumberOfVotesForCandidateId()view public returns (uint32){
+
+        return 5;
+    }
 }
