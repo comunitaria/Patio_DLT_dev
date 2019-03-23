@@ -179,7 +179,24 @@ contract ListAbiertaVotingResult{
         return votingRegistry[votingName].uniqueUserIds[voterIndex];
     }
 
-    function getTotalNumberOfVotesForCandidateId()view public returns (uint32){
+    function getTotalNumberOfVotesForCandidateName()view public returns (uint32){
+
+        uint256 numberOfVoterIdIndices = 0;
+
+        for(uint i=0;i<votingRegistry[votingName].userIdsUsedForVote.length;i++){
+            if(votingRegistry[votingName].userIdsUsedForVote[i] == voterId){
+                numberOfVoterIdIndices = numberOfVoterIdIndices +1;
+            }
+        }
+        uint256[] memory voterIdIndices = new uint256[](numberOfVoterIdIndices);
+        uint256 lastVoterIdIndexUsed = 0;
+        for(uint j=0;j<votingRegistry[votingName].userIdsUsedForVote.length;j++){
+            if(votingRegistry[votingName].userIdsUsedForVote[j] == voterId){
+                voterIdIndices[lastVoterIdIndexUsed]=j;
+                lastVoterIdIndexUsed = lastVoterIdIndexUsed+1;
+            }
+        }
+
 
         return 5;
     }
