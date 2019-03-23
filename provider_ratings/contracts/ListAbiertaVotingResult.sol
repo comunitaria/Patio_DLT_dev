@@ -2,14 +2,6 @@ pragma solidity ^0.4.24;
 
 contract ListAbiertaVotingResult{
 
-    struct Vote{
-          uint32 userId;
-          uint32 votedCandidateId;
-          uint32 points;
-          bool isValue;
-        }
-
-
     struct Voting {
         uint32[] uniqueUserIds;
         bytes32[] uniqueUserHashes;
@@ -18,7 +10,6 @@ contract ListAbiertaVotingResult{
         uint32[] userIdsUsedForVoteVotedPoints;
         uint32[] uniqueCandidateIds;
         bytes32[] uniqueCandidateNames;
-        Vote[] votes;
         bool isValue;
     }
     mapping (bytes32 => Voting) votingRegistry; // this is the registry where the results of all the votes are saved
@@ -90,10 +81,6 @@ contract ListAbiertaVotingResult{
     function getVotingNameAtIndex(uint32 index) view public returns (bytes32){
         return votingNames[index];
     }
-
-//    function getVotingForVotingName(bytes32 votingName) internal returns (Voting){
-//        return votingRegistry[votingName];
-//    }
 
     function getCandidateNameForVotingNameAtIndex(bytes32 votingName, uint32 index) view public returns (bytes32){
         return votingRegistry[votingName].uniqueCandidateNames[1];
@@ -179,25 +166,41 @@ contract ListAbiertaVotingResult{
         return votingRegistry[votingName].uniqueUserIds[voterIndex];
     }
 
-    function getTotalNumberOfVotesForCandidateName()view public returns (uint32){
+    function getTotalNumberOfVotesForCandidateNameForVoting(bytes32 votingName, bytes32 candidateName)view public returns (uint32){
 
-        uint256 numberOfVoterIdIndices = 0;
-
-        for(uint i=0;i<votingRegistry[votingName].userIdsUsedForVote.length;i++){
-            if(votingRegistry[votingName].userIdsUsedForVote[i] == voterId){
-                numberOfVoterIdIndices = numberOfVoterIdIndices +1;
+        // first we find the candidate id for the candidate name
+        uint32 candidateId;
+        for(uint i=0;i<votingRegistry[votingName].uniqueCandidateNames.length;i++){
+            if(votingRegistry[votingName].uniqueCandidateNames[i] == candidateName){
+                candidateId = votingRegistry[votingName].uniqueCandidateIds[i];
             }
         }
-        uint256[] memory voterIdIndices = new uint256[](numberOfVoterIdIndices);
-        uint256 lastVoterIdIndexUsed = 0;
-        for(uint j=0;j<votingRegistry[votingName].userIdsUsedForVote.length;j++){
-            if(votingRegistry[votingName].userIdsUsedForVote[j] == voterId){
-                voterIdIndices[lastVoterIdIndexUsed]=j;
-                lastVoterIdIndexUsed = lastVoterIdIndexUsed+1;
+        // then we calculate the length of the indices array (how many times this candidate vas voted)
+        // (solidity does not support dynamic array lengths in in-memory arrays
+        uint256 numberOfCandidateIdIndices = 0;
+
+        for(uint j=0;j<votingRegistry[votingName].userIdsUsedForVoteVotedCandidateId.length;j++){
+            if(votingRegistry[votingName].userIdsUsedForVoteVotedCandidateId[j] == candidateId){
+                numberOfCandidateIdIndices = numberOfCandidateIdIndices +1;
             }
         }
+        // then we create the array with the indices of the array where the voted points are stored
+        uint256[] memory candidateIdIndices = new uint256[](numberOfCandidateIdIndices);
+        uint256 lastCandidateIdIndexUsed = 0;
+        for(uint k=0;k<votingRegistry[votingName].userIdsUsedForVoteVotedCandidateId.length;k++){
+            if(votingRegistry[votingName].userIdsUsedForVoteVotedCandidateId[k] == candidateId){
+                candidateIdIndices[lastCandidateIdIndexUsed]=k;
+                lastCandidateIdIndexUsed = lastCandidateIdIndexUsed+1;
+            }
+        }
+        // now we iterate through the indices array that indicates which voted points belong to a specific candidate
+        // and we sum up the points that the candidate received
+        uint32 totalNumberOfPointsReceived = 0;
+        for(uint l=0;l<candidateIdIndices.length;l++){
+            totalNumberOfPointsReceived = totalNumberOfPointsReceived + votingRegistry[votingName].userIdsUsedForVoteVotedPoints[candidateIdIndices[l]];
+        }
 
+        return totalNumberOfPointsReceived;
 
-        return 5;
     }
 }
