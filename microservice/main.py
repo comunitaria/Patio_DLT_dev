@@ -181,12 +181,18 @@ def save_listabierta_voting_result():
     # Get data from request.json
     data = request.json
     unique_user_ids = data['unique_user_ids']
+    # we know that hashes are 20 characters long so there is no problem with the limit of maximal 32 characters
     unique_user_hashes = data['unique_user_hashes']
     user_ids_used_for_votes = data['user_ids_used_for_votes']
     user_ids_used_for_votes_voted_candidate = data['user_ids_used_for_votes_voted_candidate']
     user_ids_used_for_votes_points = data['user_ids_used_for_votes_points']
     unique_candidate_ids = data['unique_candidate_ids']
     unique_candidtate_names = data['unique_candidate_names']
+    # a candidate name could be longer than 32 characters.
+    # therefore if that is the case here we make sure that we only save the first 30 characters
+    for candidate_name in unique_candidtate_names:
+        if len(candidate_name) > 30:
+            candidate_name = candidate_name[0:30]
     voting_name = data['voting_name']
     unique_user_hashes = [bytes(hash, 'utf-8') for hash in unique_user_hashes]
     unique_candidtate_names = [bytes(name, 'utf-8') for name in unique_candidtate_names]
