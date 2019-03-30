@@ -4,6 +4,7 @@ from web3 import Web3
 from flask import (Flask, request, session, g, redirect, url_for, abort,
                    render_template, flash, make_response, Response)
 from functools import wraps
+import hashlib
 
 from utils.blockchain_uitls import get_eth_provider
 from utils.blockchain_uitls import  get_compiled_contract_abi
@@ -12,6 +13,8 @@ from utils.blockchain_uitls import get_eth_provider
 from utils.blockchain_uitls import get_compiled_listabierta_smart_contract_code
 from utils.blockchain_uitls import get_contract_abi
 from utils.blockchain_uitls import get_contract_bytecode
+from utils.blockchain_uitls import get_compiled_code
+
 # solc package in host is required.
 
 app = Flask(__name__)
@@ -173,6 +176,74 @@ def get_attr():
         k = bytes(data['userkey'], 'utf-8')
         result = voting.functions.getVotedOptionForUserKeyForVoting(k, voting_name).call()
         return result.decode('utf-8')
+
+
+@app.route('/process_provider_rating', methods=['POST'])
+@requires_auth
+def process_provider_rating():
+    # https://stackoverflow.com/questions/16008670/python-how-to-hash-a-string-into-8-digits
+    def generate_8_digit_hash_out_of_provider_name_and_survey_key(provider_name, survey_key):
+        hash_base = provider_name + survey_key
+        return int(hashlib.sha256(hash_base).hexdigest(), 16) % 10**8
+
+
+    # https://docs.python.org/3/library/stdtypes.html#int.to_bytes
+    def int_to_bytes(x):
+        return x.to_bytes((x.bit_length() + 7) // 8, 'big')
+
+    # Get data from request.json
+    data = request.json
+    score = data['provider_score']
+    provider_name = bytes(data['provider_name'], 'utf-8')
+    provider_address = bytes(data['provider_address'], 'utf-8')
+    provider_id = bytes(data['provider_id'], 'utf-8')
+    provider_comment = ""
+    survey_key = bytes(data['survey_key'], 'utf-8')
+
+    # web3.py instance
+    provider_to_use = get_provider()
+    w3 = Web3(provider_to_use)
+    if settings.NETWORK_TO_USE == 'rinkeby':
+        # this is necessary because of the special consensus mechanism of rinkeby:
+        # https://web3py.readthedocs.io/en/stable/middleware.html#geth-style-proof-of-authority
+        from web3.middleware import geth_poa_middleware
+        # inject the poa compatibility middleware to the innermost layer
+        w3.middleware_stack.inject(geth_poa_middleware, layer=0)
+
+    # set pre-funded account as sender
+    w3.eth.defaultAccount = w3.eth.accounts[settings.ETHER_WALLET_ID_TO_USE]
+
+    # Get compiled contract code
+    compiled_contract = get_compiled_code('ProviderRating.sol')
+    contract_byte_code = get_contract_bytecode(compiled_contract, 'ProviderRating.sol')
+    contract_abi = get_contract_abi(compiled_contract, 'ProviderRating.sol')
+
+    rating_contract = w3.eth.contract(
+        address=settings.PROVIDER_RATING_CONTRACT_ADDRESS,
+        abi=contract_abi
+    )
+
+    HASH_OF_PROVIDER_NAME_AND_SURVEY_KEY = int_to_bytes(
+        generate_8_digit_hash_out_of_provider_name_and_survey_key(provider_name,
+                                                                  survey_key))
+
+    # Submit the transaction that deploys the contract
+    try:
+        tx_hash = rating_contract.functions.rateProvider(survey_key,
+                                                         HASH_OF_PROVIDER_NAME_AND_SURVEY_KEY,
+                                                         provider_name, provider_address,
+                                                         provider_id,
+                                                         score,
+                                                         provider_comment).transact()
+    except ValueError:
+        return "Attempt of duplicated rating. Not allowed."
+
+
+    # Wait for the transaction to be mined, and get the transaction receipt
+    # tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash)
+    # tx_hash = tx_receipt.transactionHash
+    print(tx_hash.hex())
+    return tx_hash.hex()
 
 
 @app.route('/save_listabierta_voting_result', methods=['POST'])

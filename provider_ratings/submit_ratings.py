@@ -64,9 +64,9 @@ else:
 PROVIDER_NAME = b'Endesa121unique'
 PROVIDER_POSTAL_ADDRESS = b'Calle Pacheco y Nunez del Prado 55b bajo izquierda'
 PROVIDER_IDENTIFICATION_NUMBER = b'Y4581880H'
-SURVEY_KEY_FOR_RATING = b'123446'
-PROVIDER_SCORE = 7
-assert(0 <= PROVIDER_SCORE <= 10)
+SURVEY_KEY_FOR_RATING = b'123456'
+PROVIDER_SCORE = 3
+assert(0 <= PROVIDER_SCORE <= 5)
 PROVIDER_COMMENT = b'new comment'
 # we perform this operation (generating the hash) on the client side because it is faster and
 # recommended to perform such operation on the client side in order to save gas costs)
@@ -82,11 +82,15 @@ try:
     number_of_existing_ratings = provider_rating.functions.getNumberOfRatingsSaved().call()
     for i in range(0, number_of_existing_ratings):
         rating_hash = provider_rating.functions.getRatingHashAtIndex(i).call()
-        c = provider_rating.functions.getRatingAuthorKeyForRatingHash(rating_hash).call()
+        # c = provider_rating.functions.getRatingAuthorKeyForRatingHash(rating_hash).call()
         rating_comment = provider_rating.functions.getRatingCommentForRatingHash(rating_hash).call()
         print('retrieved saved rating with hash: {} rating comment: {}'.format(rating_hash, rating_comment))
 
+    ratings = provider_rating.functions.getRatingsForProvider(PROVIDER_IDENTIFICATION_NUMBER).call()
+    print(ratings)
+
 except ValueError as e:
+    print(e)
     print("failed to submit transaction this should only happen if you try to submit a providername and surveykey "
           "that already was already used to uniquely identify a Rating")
 

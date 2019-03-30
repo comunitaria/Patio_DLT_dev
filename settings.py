@@ -29,7 +29,8 @@ LISTABIERTA_VOTING_CONTRACT_ADDRESS = '0x22A323dcFB724160a20A408d579D00e9b285cf9
 
 try:
     from local_settings import *
-except ImportError:
+except ImportError as e:
+    print(e)
     pass
 
 
