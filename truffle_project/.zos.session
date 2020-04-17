@@ -1,5 +1,6 @@
 {
-  "network": "rinkeby",
-  "from": "0x1df62f291b2e969fb0849d99d9ce41e2f137006e",
-  "expires": "2019-02-06T12:12:16.428Z"
+  "network": "local",
+  "from": "0xC7B76C03a348a1A4e9f39B4204f7e3Fc10479208",
+  "timeout": 3600,
+  "expires": "2019-08-05T17:08:31.204Z"
 }

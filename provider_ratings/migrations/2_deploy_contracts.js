@@ -3,5 +3,6 @@ var ListAbiertaVotingResult = artifacts.require("./ListAbiertaVotingResult.sol")
 
 
 module.exports = function(deployer) {
+  deployer.deploy(ProviderRating);
   deployer.deploy(ListAbiertaVotingResult);
 };

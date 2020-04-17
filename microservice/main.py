@@ -235,7 +235,8 @@ def process_provider_rating():
                                                          provider_id,
                                                          score,
                                                          provider_comment).transact()
-    except ValueError:
+    except ValueError as e:
+        print(e)
         return "Attempt of duplicated rating. Not allowed."
 
 

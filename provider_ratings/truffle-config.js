@@ -15,5 +15,11 @@ module.exports = {
       network_id: 4,
       gas: 4612388 // Gas limit used for deploys
     }
+  },
+  compilers: {
+    solc: {
+      version: "^0.4.24", // A version or constraint - Ex. "^0.5.0"
+                         // Can also be set to "native" to use a native solc
+    }
   }
 };
