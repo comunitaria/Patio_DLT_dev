@@ -1,7 +1,6 @@
-pragma solidity ^0.4.24;
-import "zos-lib/contracts/Initializable.sol";
+pragma solidity >=0.4.24 <0.6.0;
 
-contract Voting is Initializable{
+contract Voting {
 
     struct Vote {
         bytes32 votingName;
@@ -17,20 +16,20 @@ contract Voting is Initializable{
     // mapped by the name of the voting
     bytes32[] votingNames;
 
-    function initialize(){
+    function initialize() public pure {
 
     }
 
 
-    function submitNewVoting(bytes32[] votingOptionsForTopic, uint8[] votesReceivedForTopic,
-        bytes32[] userKeysForOptions, bytes32[] votedOptionsForUserKeys, bytes32 votingNameForTopic) public {
-        Vote storage newVote; // memory would be better here but it is impossible due to evm restrictions:
+    function submitNewVoting(bytes32[] memory votingOptionsForTopic, uint8[] memory votesReceivedForTopic,
+        bytes32[] memory userKeysForOptions, bytes32[] memory votedOptionsForUserKeys, bytes32 votingNameForTopic) public {
+        // Vote storage newVote; // memory would be better here but it is impossible due to evm restrictions:
         // https://ethereum.stackexchange.com/questions/36365/member-x-is-not-available-in-struct-y-memory-outside-of-storage
 
         require(votingOptionsForTopic.length == votesReceivedForTopic.length);
         require(userKeysForOptions.length == votedOptionsForUserKeys.length);
         votingNames.push(votingNameForTopic);
-        newVote = votingRegistry[votingNameForTopic];
+        Vote storage newVote = votingRegistry[votingNameForTopic];
         uint votingOptionsForTopicLength = votingOptionsForTopic.length;
         for (uint i=0; i<votingOptionsForTopicLength; i++) {
             newVote.votesReceivedPerOption[votingOptionsForTopic[i]] = votesReceivedForTopic[i];
@@ -96,7 +95,7 @@ contract Voting is Initializable{
         return votingRegistry[votingName].votesReceivedPerOption[votedOption];
     }
 
-    function addedFunction() view public returns (uint256){
+    function addedFunction() pure public returns (uint256){
         return 5;
     }
 

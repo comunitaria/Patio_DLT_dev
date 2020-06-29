@@ -13,7 +13,7 @@ from utils.blockchain_uitls import get_eth_provider
 from utils.blockchain_uitls import get_compiled_listabierta_smart_contract_code
 from utils.blockchain_uitls import get_contract_abi
 from utils.blockchain_uitls import get_contract_bytecode
-from utils.blockchain_uitls import get_compiled_code
+from utils.blockchain_uitls import get_compiled_code, get_compiled_contract_bytecode
 
 # solc package in host is required.
 
@@ -85,7 +85,7 @@ def process_voting():
     voting_name = bytes(data['voting_name'], 'utf-8')
 
     # Get contract code
-    # compiled_contract = get_compiled_code('Voting.sol')
+    # compiled_contract = get_compiled_voting_code('Voting.sol')
     # contract_byte_code = get_contract_bytecode(compiled_contract, 'Voting.sol')
     # contract_abi = get_contract_abi(compiled_contract, 'Voting.sol')
 
@@ -107,6 +107,34 @@ def process_voting():
 
     # Get compiled contract code
     compiled_contract_abi = get_compiled_contract_abi('Voting.json')
+    compiled_contract_bytecode = get_compiled_contract_bytecode('Voting.json')
+
+    voting_contract = None
+
+    if not settings.VOTING_SMART_CONTRACT_EXISTING_ON_BLOCKCHAIN:
+
+        # Instantiate and deploy contract
+        VotingResult = w3.eth.contract(abi=compiled_contract_abi, bytecode=compiled_contract_bytecode)
+
+        # Submit the transaction that deploys the contract
+        tx_hash = VotingResult.constructor().transact()
+
+        # Wait for the transaction to be mined, and get the transaction receipt
+        tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash)
+        print("Deployed. gasUsed={gasUsed} contractAddress={contractAddress}".format(**tx_receipt))
+
+        # Create the contract instance with the newly-deployed address
+        voting_contract = w3.eth.contract(
+            address=tx_receipt.contractAddress,
+            abi=compiled_contract_abi,
+        )
+
+    else:
+        print("Found existing smart contract deployed at: {}".format(settings.VOTING_SMART_CONTRACT_ADDRESS))
+        voting_contract = w3.eth.contract(
+            address=settings.VOTING_SMART_CONTRACT_ADDRESS,
+            abi=compiled_contract_abi
+        )
 
     check_summed_contract_address = Web3.toChecksumAddress(settings.UPGRADABLE_VOTING_PROXY_SMART_CONTRACT_ADDRESS)
 

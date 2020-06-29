@@ -1,7 +1,7 @@
 from web3 import Web3, HTTPProvider
 import os
 import settings
-from solc import compile_source
+# from solc import compile_source
 import json
 
 
