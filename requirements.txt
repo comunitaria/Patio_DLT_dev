@@ -33,7 +33,7 @@ prompt-toolkit==1.0.15
 ptyprocess==0.6.0
 py-solc==3.1.0
 pycparser==2.18
-pycryptodome==3.6.4
+pycryptodome==3.6.6
 pyethash==0.1.27
 Pygments==2.2.0
 pysha3==1.0.2
