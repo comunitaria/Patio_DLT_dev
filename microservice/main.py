@@ -120,8 +120,10 @@ def process_voting():
         tx_hash = VotingResult.constructor().transact()
 
         # Wait for the transaction to be mined, and get the transaction receipt
-        tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash)
-        print("Deployed. gasUsed={gasUsed} contractAddress={contractAddress}".format(**tx_receipt))
+        # tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash)
+        # print("Deployed. gasUsed={gasUsed} contractAddress={contractAddress}".format(**tx_receipt))
+        print("Deployed Tx Address: %s" % tx_hash.hex())
+        return tx_hash.hex()
 
         # Create the contract instance with the newly-deployed address
         voting_contract = w3.eth.contract(
@@ -136,7 +138,7 @@ def process_voting():
             abi=compiled_contract_abi
         )
 
-    check_summed_contract_address = Web3.toChecksumAddress(settings.UPGRADABLE_VOTING_PROXY_SMART_CONTRACT_ADDRESS)
+    check_summed_contract_address = Web3.toChecksumAddress(settings.VOTING_SMART_CONTRACT_ADDRESS)
 
     voting_contract = w3.eth.contract(
         address=check_summed_contract_address,
