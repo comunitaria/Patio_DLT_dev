@@ -1,5 +1,5 @@
 
-# Votings over Ethereum Smart Contracts
+# Patio Votings over Ethereum Smart Contracts
 
 ## How to work with the upgradeable smart contract infrastructure:
 install the zos framework in the project: `npm install zos`
